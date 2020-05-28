@@ -1,6 +1,7 @@
 package com.chat.tabula.controller;
 
 import com.chat.tabula.domain.ChatRoom;
+import com.chat.tabula.domain.ChatRoomForm;
 import com.chat.tabula.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,6 @@ public class ChatController {
     @PostMapping("/room/new")
     public String makeRoom(ChatRoomForm form){
         chatRoomRepository.createChatRoom(form.getName());
-
         return "redirect:/";
     }
 

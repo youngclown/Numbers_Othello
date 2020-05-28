@@ -1,4 +1,4 @@
-package com.chat.tabula.controller;
+package com.chat.tabula.domain;
 
 import lombok.Getter;
 import lombok.Setter;
