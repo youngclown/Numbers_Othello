@@ -20,7 +20,39 @@ public class ChatRoom {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.name = name;
+
+        ChatPushMessage t = new ChatPushMessage(chatRoom.getSessions());
+        t.start();
+
         return chatRoom;
+    }
+
+    static class ChatPushMessage extends Thread {
+        Set<WebSocketSession> sessions;
+        public ChatPushMessage(Set<WebSocketSession> sessions) {
+            this.sessions = sessions;
+        }
+
+        public void run()
+        {
+            while (true) {
+
+                TextMessage textMessage;
+                for (WebSocketSession sess:sessions) {
+                    textMessage = new TextMessage((new Date()).toString());
+                    try {
+                        sess.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 
