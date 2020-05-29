@@ -21,7 +21,7 @@ public class ChatRoom {
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.name = name;
 
-        ChatPushMessage t = new ChatPushMessage(chatRoom.getSessions());
+        ChatPushMessage t = new ChatPushMessage(chatRoom.getSessions(), chatRoom.getWriteUser());
         t.start();
 
         return chatRoom;
@@ -29,26 +29,48 @@ public class ChatRoom {
 
     static class ChatPushMessage extends Thread {
         Set<WebSocketSession> sessions;
-        public ChatPushMessage(Set<WebSocketSession> sessions) {
+        Map<String,String> writeUser;
+        public ChatPushMessage(Set<WebSocketSession> sessions, Map<String,String> writeUser) {
             this.sessions = sessions;
+            this.writeUser = writeUser;
         }
 
         public void run()
         {
             while (true) {
-
                 TextMessage textMessage;
-                for (WebSocketSession sess:sessions) {
-                    textMessage = new TextMessage((new Date()).toString());
+                Iterator<WebSocketSession> i = sessions.iterator();
+                List<String> writerList = new ArrayList<>();
+
+                boolean removeCheck = false;
+                while (i.hasNext()) {
+                    WebSocketSession sess = i.next(); // must be called before you can call i.remove()
                     try {
+                        textMessage = new TextMessage((new Date()).toString());
                         sess.sendMessage(textMessage);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        removeCheck = true;
+                        writerList.add(writeUser.get(sess.getId()));
+                        i.remove();
+
+                    }
+                }
+
+                if (removeCheck) {
+                    for (WebSocketSession sess:sessions) {
+                        for (String writer:writerList) {
+                            textMessage = new TextMessage(writer + "님이 퇴장하셨습니다.");
+                            try {
+                                sess.sendMessage(textMessage);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
                 try {
                     Thread.sleep(2000L);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
