@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>채팅 서비스</title>
@@ -15,8 +15,10 @@
 
 </head>
 <body>
-<input type="text" id="nickname" class="form-inline" placeholder="닉네임을 입력해주세요" required autofocus>
-<button class="btn btn-primary" id="name">확인</button>
+
+
+<span id="userName" sec:authentication="name"></span>님 게임시작합니다.
+
 <label for="roomId" class="label label-default">방 번호</label>
 <label th:text="*{room.roomId}" id="roomId" class="form-inline"></label>
 <br>
@@ -30,17 +32,13 @@
 </script>
 </body>
 <script th:inline="javascript">
-    var webSocket;
-    var nickname;
+    let webSocket;
     /* <![CDATA[*/
-    var roomId = /*[[${room.roomId}]]*/;
+    let roomId = /*[[${room.roomId}]]*/;
     /* ]]> */
-    document.getElementById("name").addEventListener("click", function () {
-        nickname = document.getElementById("nickname").value;
-        document.getElementById("nickname").style.display = "none";
-        document.getElementById("name").style.display = "none";
-        connect();
-    })
+
+    connect();
+
     document.getElementById("send").addEventListener("click", function () {
         send();
     })
@@ -53,23 +51,23 @@
     }
 
     function disconnect() {
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'LEAVE', writer: nickname}));
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'LEAVE', writer: name}));
         webSocket.close();
     }
 
     function send() {
-        msg = document.getElementById("message").value;
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', writer: nickname, message: msg}));
+        const msg = document.getElementById("message").value;
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', writer: name, message: msg}));
         document.getElementById("message").value = "";
     }
 
     function onOpen() {
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: nickname}));
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: name}));
     }
 
     function onMessage(e) {
-        data = e.data;
-        chatroom = document.getElementById("chatroom");
+        const data = e.data;
+        const chatroom = document.getElementById("chatroom");
         chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
     }
 

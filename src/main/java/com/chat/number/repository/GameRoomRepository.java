@@ -16,7 +16,7 @@ public class GameRoomRepository {
     }
 
     public List<GameRoom> findAllRoom(){
-        List gameRooms = new ArrayList<>(gameRoomMap.values());
+        List<GameRoom> gameRooms = new ArrayList<>(gameRoomMap.values());
         Collections.reverse(gameRooms);
         return gameRooms;
     }

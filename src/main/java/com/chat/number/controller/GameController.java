@@ -3,6 +3,7 @@ package com.chat.number.controller;
 import com.chat.number.domain.ChatRoomForm;
 import com.chat.number.domain.GameRoom;
 import com.chat.number.repository.GameRoomRepository;
+import com.chat.number.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,6 @@ public class GameController {
 
     @PostMapping("/room/new")
     public String makeRoom(ChatRoomForm form){
-        log.info("check!!!!!!!!!!!");
         gameRoomRepository.createChatRoom(form.getName());
         return "redirect:/start";
     }

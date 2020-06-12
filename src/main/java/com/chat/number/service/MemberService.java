@@ -3,7 +3,7 @@ package com.chat.number.service;
 import com.chat.number.domain.entity.MemberEntity;
 import com.chat.number.dto.MemberDto;
 import com.chat.number.repository.MemberRepository;
-import com.chat.number.type.Role;
+import com.chat.number.type.RoleType;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,15 +22,14 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
-  private MemberRepository memberRepository;
+  private final MemberRepository memberRepository;
 
   @Transactional
-  public Long joinUser(MemberDto memberDto) {
+  public void joinUser(MemberDto memberDto) {
     // 비밀번호 암호화
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-
-    return memberRepository.save(memberDto.toEntity()).getId();
+    memberRepository.save(memberDto.toEntity());
   }
 
   @Override
@@ -41,9 +40,9 @@ public class MemberService implements UserDetailsService {
     List<GrantedAuthority> authorities = new ArrayList<>();
 
     if (("admin@example.com").equals(userEmail)) {
-      authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
+      authorities.add(new SimpleGrantedAuthority(RoleType.ADMIN.getValue()));
     } else {
-      authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));
+      authorities.add(new SimpleGrantedAuthority(RoleType.MEMBER.getValue()));
     }
 
     return new User(userEntity.getEmail(), userEntity.getPassword(), authorities);
