@@ -3,18 +3,21 @@ package com.chat.tabula.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Getter @Setter
 public class ChatRoom {
     private String roomId;
     private String name;
     private Set<WebSocketSession> sessions = new HashSet<>();
     private Map<String,String> writeUser = new HashMap<>();
+
 
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();
@@ -25,6 +28,22 @@ public class ChatRoom {
         t.start();
 
         return chatRoom;
+    }
+
+    private static boolean messageCheckPush (Iterator<WebSocketSession> i, TextMessage textMessage, List<String> writerList, Map<String,String> writeUser) {
+        boolean removeCheck = false;
+        while (i.hasNext()) {
+            WebSocketSession sess = i.next(); // must be called before you can call i.remove()
+            try {
+                sess.sendMessage(textMessage);
+            } catch (Exception e) {
+                removeCheck = true;
+                writerList.add(writeUser.get(sess.getId()));
+                i.remove();
+            }
+        }
+
+        return removeCheck;
     }
 
     static class ChatPushMessage extends Thread {
@@ -38,32 +57,17 @@ public class ChatRoom {
         public void run()
         {
             while (true) {
-                TextMessage textMessage;
                 Iterator<WebSocketSession> i = sessions.iterator();
                 List<String> writerList = new ArrayList<>();
-
-                boolean removeCheck = false;
-                while (i.hasNext()) {
-                    WebSocketSession sess = i.next(); // must be called before you can call i.remove()
-                    try {
-                        textMessage = new TextMessage((new Date()).toString());
-                        sess.sendMessage(textMessage);
-                    } catch (Exception e) {
-                        removeCheck = true;
-                        writerList.add(writeUser.get(sess.getId()));
-                        i.remove();
-
-                    }
-                }
-
-                if (removeCheck) {
+                TextMessage textMessage = new TextMessage((new Date()).toString());
+                if (messageCheckPush(i, textMessage, writerList, writeUser)) {
                     for (WebSocketSession sess:sessions) {
                         for (String writer:writerList) {
                             textMessage = new TextMessage(writer + "님이 퇴장하셨습니다.");
                             try {
                                 sess.sendMessage(textMessage);
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                log.info("removeCheck {}", e.getMessage());
                             }
                         }
                     }
@@ -71,7 +75,7 @@ public class ChatRoom {
                 try {
                     Thread.sleep(2000L);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.info("Thread.sleep {}", e.getMessage());
                 }
             }
         }
@@ -99,24 +103,9 @@ public class ChatRoom {
 
     private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
-
         Iterator<WebSocketSession> i = sessions.iterator();
         List<String> writerList = new ArrayList<>();
-
-        boolean removeCheck = false;
-        while (i.hasNext()) {
-            WebSocketSession sess = i.next(); // must be called before you can call i.remove()
-            try {
-                sess.sendMessage(textMessage);
-            } catch (Exception e) {
-                removeCheck = true;
-                writerList.add(writeUser.get(sess.getId()));
-                i.remove();
-
-            }
-        }
-
-        if (removeCheck) {
+        if (messageCheckPush(i, textMessage, writerList, writeUser)) {
             for (WebSocketSession sess:sessions) {
                 for (String writer:writerList) {
                     textMessage = new TextMessage(objectMapper.writeValueAsString(writer + "님이 퇴장하셨습니다."));
@@ -125,10 +114,4 @@ public class ChatRoom {
             }
         }
     }
-
-
-
-
-
-
 }
