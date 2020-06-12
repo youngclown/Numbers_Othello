@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ChatController {
     private final GameRoomRepository gameRoomRepository;
 
-    @GetMapping("/")
+    @GetMapping("/start")
     public String rooms(Model model){
         model.addAttribute("rooms",gameRoomRepository.findAllRoom());
         return "rooms";
