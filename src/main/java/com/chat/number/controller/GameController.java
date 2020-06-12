@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class ChatController {
+public class GameController {
     private final GameRoomRepository gameRoomRepository;
 
     @GetMapping("/start")
@@ -39,8 +39,9 @@ public class ChatController {
 
     @PostMapping("/room/new")
     public String makeRoom(ChatRoomForm form){
+        log.info("check!!!!!!!!!!!");
         gameRoomRepository.createChatRoom(form.getName());
-        return "redirect:/";
+        return "redirect:/start";
     }
 
 }

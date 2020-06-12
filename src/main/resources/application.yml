@@ -4,15 +4,16 @@ spring:
     url: jdbc:mysql://192.168.56.101:3306/testdb?serverTimezone=UTC&characterEncoding=UTF-8
     username: test
     password: 123456
-
+  thymeleaf:
+    check-template-location: true
+    cache: false
+    
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-
-
 
 
 logging:
@@ -24,3 +25,4 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
