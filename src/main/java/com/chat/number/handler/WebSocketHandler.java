@@ -1,8 +1,8 @@
-package com.chat.tabula.handler;
+package com.chat.number.handler;
 
-import com.chat.tabula.domain.ChatMessage;
-import com.chat.tabula.domain.ChatRoom;
-import com.chat.tabula.repository.ChatRoomRepository;
+import com.chat.number.domain.ChatMessage;
+import com.chat.number.domain.GameRoom;
+import com.chat.number.repository.GameRoomRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 @RequiredArgsConstructor
 public class WebSocketHandler extends TextWebSocketHandler {
-    private final ChatRoomRepository chatRoomRepository;
+    private final GameRoomRepository gameRoomRepository;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -34,8 +34,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
         log.info("메세지 전송 = {} : {}",session,message.getPayload());
         String msg = message.getPayload();
         ChatMessage chatMessage = objectMapper.readValue(msg,ChatMessage.class);
-        ChatRoom chatRoom = chatRoomRepository.findRoomById(chatMessage.getChatRoomId());
-        chatRoom.handleMessage(session,chatMessage,objectMapper);
+        GameRoom gameRoom = gameRoomRepository.findRoomById(chatMessage.getChatRoomId());
+        gameRoom.handleMessage(session,chatMessage,objectMapper);
     }
 
 }

@@ -1,5 +1,6 @@
-package com.chat.tabula.domain;
+package com.chat.number.domain;
 
+import com.chat.number.type.MessageType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,22 +13,22 @@ import java.util.*;
 
 @Slf4j
 @Getter @Setter
-public class ChatRoom {
+public class GameRoom {
     private String roomId;
     private String name;
     private Set<WebSocketSession> sessions = new HashSet<>();
     private Map<String,String> writeUser = new HashMap<>();
 
 
-    public static ChatRoom create(String name){
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
+    public static GameRoom create(String name){
+        GameRoom gameRoom = new GameRoom();
+        gameRoom.roomId = UUID.randomUUID().toString();
+        gameRoom.name = name;
 
-        ChatPushMessage t = new ChatPushMessage(chatRoom.getSessions(), chatRoom.getWriteUser());
+        ChatPushMessage t = new ChatPushMessage(gameRoom.getSessions(), gameRoom.getWriteUser());
         t.start();
 
-        return chatRoom;
+        return gameRoom;
     }
 
     private static boolean messageCheckPush (Iterator<WebSocketSession> i, TextMessage textMessage, List<String> writerList, Map<String,String> writeUser) {

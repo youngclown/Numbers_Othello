@@ -1,8 +1,8 @@
-package com.chat.tabula.controller;
+package com.chat.number.controller;
 
-import com.chat.tabula.domain.ChatRoom;
-import com.chat.tabula.domain.ChatRoomForm;
-import com.chat.tabula.repository.ChatRoomRepository;
+import com.chat.number.domain.ChatRoomForm;
+import com.chat.number.domain.GameRoom;
+import com.chat.number.repository.GameRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
-    private final ChatRoomRepository chatRoomRepository;
+    private final GameRoomRepository gameRoomRepository;
 
     @GetMapping("/")
     public String rooms(Model model){
-        model.addAttribute("rooms",chatRoomRepository.findAllRoom());
+        model.addAttribute("rooms",gameRoomRepository.findAllRoom());
         return "rooms";
     }
 
     @GetMapping("/rooms/{id}")
     public String room(@PathVariable String id, Model model){
-        ChatRoom room = chatRoomRepository.findRoomById(id);
+        GameRoom room = gameRoomRepository.findRoomById(id);
         model.addAttribute("room",room);
         return "room";
     }
@@ -39,7 +39,7 @@ public class ChatController {
 
     @PostMapping("/room/new")
     public String makeRoom(ChatRoomForm form){
-        chatRoomRepository.createChatRoom(form.getName());
+        gameRoomRepository.createChatRoom(form.getName());
         return "redirect:/";
     }
 

@@ -1,5 +1,6 @@
-package com.chat.tabula.domain;
+package com.chat.number.domain;
 
+import com.chat.number.type.MessageType;
 import lombok.Getter;
 import lombok.Setter;
 

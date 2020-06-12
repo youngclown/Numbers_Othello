@@ -1,4 +1,4 @@
-package com.chat.tabula.config;
+package com.chat.number.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
