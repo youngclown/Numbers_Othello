@@ -18,6 +18,12 @@ spring:
     converters:
       preferred-json-mapper: gson
 
+# spring boot의 기본 properties
+server.error:
+  include-exception: false # 응답에 exception의 내용을 포함할지 여부
+  include-stacktrace: never # 오류 응답에 stacktrace 내용을 포함할 지 여부
+  path: '/error' # 오류 응답을 처리할 핸들러(ErrorController)의 path
+  whitelabel.enabled: true # 브라우저 요청에 대해 서버 오류시 기본으로 노출할 페이지를 사용할지 여부
 
 logging:
   level:
