@@ -5,20 +5,15 @@
     <title>채팅 서비스</title>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
     <!-- 부가적인 테마 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-
 </head>
 <body>
 
 
 <span id="userName" sec:authentication="name"></span>님 게임시작합니다.
-
 <label for="roomId" class="label label-default">방 번호</label>
 <label th:text="*{room.roomId}" id="roomId" class="form-inline"></label>
 <br>
@@ -37,6 +32,8 @@
     let roomId = /*[[${room.roomId}]]*/;
     /* ]]> */
 
+    const userNm = document.getElementById('userName').innerHTML;
+
     connect();
 
     document.getElementById("send").addEventListener("click", function () {
@@ -51,18 +48,18 @@
     }
 
     function disconnect() {
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'LEAVE', writer: name}));
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'LEAVE', writer: userNm}));
         webSocket.close();
     }
 
     function send() {
         const msg = document.getElementById("message").value;
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', writer: name, message: msg}));
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', writer: userNm, message: msg}));
         document.getElementById("message").value = "";
     }
 
     function onOpen() {
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: name}));
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: userNm}));
     }
 
     function onMessage(e) {

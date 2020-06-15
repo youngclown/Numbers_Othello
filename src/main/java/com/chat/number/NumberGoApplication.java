@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TabulaApplication {
+public class NumberGoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TabulaApplication.class, args);
+        SpringApplication.run(NumberGoApplication.class, args);
     }
 
 }
