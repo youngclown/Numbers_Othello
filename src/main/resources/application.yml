@@ -7,13 +7,16 @@ spring:
   thymeleaf:
     check-template-location: true
     cache: false
-    
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  mvc:
+    converters:
+      preferred-json-mapper: gson
 
 
 logging:
@@ -25,4 +28,7 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+
+
 
