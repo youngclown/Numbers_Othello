@@ -1,16 +1,9 @@
-package model;
+package com.chat.number.model;
 
 import java.util.ArrayList;
 
-public class Baduk {
-	/*
-	 * B : BLACK
-	 * W : WHITE
-	 * K : BLANK
-	 * L : BLOCK
-	 * BL : BLACK BLOCK
-	 * WL : WHITE BLOCK
-	 */
+public class NumberGo {
+
 	String type = "";
 	int i = 0;
 	int j = 0;

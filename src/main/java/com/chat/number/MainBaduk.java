@@ -1,15 +1,18 @@
+package com.chat.number;
+
+import com.chat.number.model.NumberGo;
+import com.chat.number.type.NumberGoType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import model.Baduk;
 
 public class MainBaduk {
 	static int DEFAULT_NUM = 6;
-	static Map<String, String> edgeMap = new HashMap<String, String>();
-	static String TYPE_CHECK = "B";
-	
+	static Map<String, String> edgeMap = new HashMap<>();
+
 	public static void main(String[] args) {
 
 		
@@ -21,14 +24,14 @@ public class MainBaduk {
 		 * BL : BLACK BLOCK
 		 * WL : WHITE BLOCK
 		 */
-		ArrayList<Baduk> list = new ArrayList<Baduk>();
-		Baduk baduk = null;
+		ArrayList<NumberGo> list = new ArrayList<>();
+		NumberGo baduk;
 		
 		int width = 0;
 		int height = 0;
 		
 		for (int i = 0; i < DEFAULT_NUM*DEFAULT_NUM; i++) {
-			baduk = new Baduk();
+			baduk = new NumberGo();
 			baduk.setType("N");
 			
 			if ((i+1) % DEFAULT_NUM == 0) {
@@ -58,8 +61,7 @@ public class MainBaduk {
 		
 		Scanner input = new Scanner(System.in);
 		
-		int number = 0;
-		int value = 0;
+		int number, value;
 		
 		while (!"Q".equals(input.next())) {
 			System.out.println("black turn : ");
@@ -84,8 +86,8 @@ public class MainBaduk {
 			number = input.nextInt();
 			System.out.println("value : ");
 			value = input.nextInt();
-			n.gamePlay(list, number, value, "W");
-			n.replayList(list, "W");
+			n.gamePlay(list, number, value, NumberGoType.PLAYER_ONE.getValue());
+			n.replayList(list, NumberGoType.PLAYER_TWO.getValue());
 			n.replayList(list, "B");
 
 			for (int i = 0; i < list.size(); i++) {
@@ -108,16 +110,16 @@ public class MainBaduk {
 		edgeMap.put("RD","" + (DEFAULT_NUM+1));
 	}
 	
-	public void gamePlay(ArrayList<Baduk> list, int i, int value, String type){
+	public void gamePlay(ArrayList<NumberGo> list, int i, int value, String type){
 		if ("N".equals(list.get(i).getType())) {
 			playLogic(list, i, value, type);
 		} else {
-			System.out.println("´Ù¸¥ °÷¿¡ µÎ½Ã±â ¹Ù¶ø´Ï´Ù.");
+			System.out.println("ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î½Ã±ï¿½ ï¿½Ù¶ï¿½ï¿½Ï´ï¿½.");
 		}
 	}
 
-	private void playLogic(ArrayList<Baduk> list, int i, int value, String type) {
-		init();	// Ç×»ó ÃÊ±âÈ­¸¦ ÇØ¾ßÇÕ´Ï´Ù.
+	private void playLogic(ArrayList<NumberGo> list, int i, int value, String type) {
+		init();	// ï¿½×»ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Õ´Ï´ï¿½.
 		int width = list.get(i).getI();
 		int height = list.get(i).getJ();	//Height
 		list.get(i).setType(type);
@@ -176,7 +178,7 @@ public class MainBaduk {
 		}
 	}
 	
-	public int replayList(ArrayList<Baduk> list, String type){
+	public int replayList(ArrayList<NumberGo> list, String type){
 		int score = 0;
 
 		for (int i = 0; i < list.size(); i++) {
@@ -199,7 +201,7 @@ public class MainBaduk {
 		return score;
 	}
 	
-	public int parseList(Baduk daduk){
+	public int parseList(NumberGo daduk){
 		if("B".equals(daduk.getType()) || "W".equals(daduk.getType())){
 			return 1;
 		} else {
@@ -207,7 +209,7 @@ public class MainBaduk {
 		}
 	}
 	
-	public void chageList(String type, Baduk daduk){
+	public void chageList(String type, NumberGo daduk){
 		if("B".equals(daduk.getType()) || "W".equals(daduk.getType())){
 			if ("B".equals(type)){
 				daduk.setType("BL");
