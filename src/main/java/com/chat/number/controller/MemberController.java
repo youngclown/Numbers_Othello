@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @AllArgsConstructor
 public class MemberController {
-  private MemberService memberService;
+
+  private final MemberService memberService;
 
   // 메인 페이지
   @GetMapping("/")

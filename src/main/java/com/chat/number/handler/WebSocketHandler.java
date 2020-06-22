@@ -3,6 +3,7 @@ package com.chat.number.handler;
 import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
 import com.chat.number.repository.GameRoomRepository;
+import com.chat.number.service.PlayService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final GameRoomRepository gameRoomRepository;
     private final ObjectMapper objectMapper;
+
+    private final PlayService playService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -35,7 +38,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String msg = message.getPayload();
         ChatMessage chatMessage = objectMapper.readValue(msg,ChatMessage.class);
         GameRoom gameRoom = gameRoomRepository.findRoomById(chatMessage.getChatRoomId());
-        gameRoom.handleMessage(session,chatMessage,objectMapper);
+        playService.handleMessage(gameRoom, session,chatMessage,objectMapper);
     }
 
 }
