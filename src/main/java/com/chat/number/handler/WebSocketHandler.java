@@ -19,7 +19,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final GameRoomRepository gameRoomRepository;
     private final ObjectMapper objectMapper;
-
     private final PlayService playService;
 
     @Override

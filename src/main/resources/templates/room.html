@@ -22,9 +22,19 @@
 <div id="chatroom" style="width:400px; height: 600px; border:1px solid; background-color : gray"></div>
 <input type="text" id="message" style="height : 30px; width : 340px" placeholder="내용을 입력하세요" autofocus>
 <button class="btn btn-primary" id="send">전송</button>
-<script>
 
-</script>
+<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(1)">전송1</button>
+<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(2)">전송2</button>
+<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(3)">전송3</button>
+<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(4)">전송4</button>
+<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(5)">전송5</button>
+
+
+<div>
+
+</div>
+
+
 </body>
 <script th:inline="javascript">
     let webSocket;
@@ -39,6 +49,10 @@
     document.getElementById("send").addEventListener("click", function () {
         send();
     })
+
+    function sendNumber(number) {
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'GAME', writer: userNm, message: number}));
+    }
 
     function connect() {
         webSocket = new WebSocket("ws://localhost:8080/chat");
@@ -64,8 +78,13 @@
 
     function onMessage(e) {
         const data = e.data;
-        const chatroom = document.getElementById("chatroom");
-        chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
+        if (data.indexOf("GAME^^")) {
+            var tempData = data.replace("GAME^^","")
+            chatroom.innerHTML = chatroom.innerHTML + "<br>" + tempData;
+        } else {
+            const chatroom = document.getElementById("chatroom");
+            chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
+        }
     }
 
     function onClose() {

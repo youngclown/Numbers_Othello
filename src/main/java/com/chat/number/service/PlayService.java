@@ -19,10 +19,8 @@ public class PlayService {
 
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     if(chatMessage.getType() == MessageType.ENTER){
-      System.out.println(session.getId());
       gameRoom.getSessions().add(session);
       gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter());
-
       chatMessage.setMessage(chatMessage.getWriter() + "님이 입장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.LEAVE){
       gameRoom.getSessions().remove(session);
@@ -31,6 +29,9 @@ public class PlayService {
       chatMessage.setMessage(chatMessage.getWriter() + "님이 퇴장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.CHAT){
       chatMessage.setMessage(chatMessage.getWriter() + " : " + chatMessage.getMessage());
+    } else if (chatMessage.getType() == MessageType.GAME) {
+      String gameRule = "GAME^^1";
+      chatMessage.setMessage(gameRule);
     }
     send(gameRoom, chatMessage,objectMapper);
   }
@@ -38,6 +39,9 @@ public class PlayService {
   public void send(GameRoom gameRoom, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
     Iterator<WebSocketSession> i = gameRoom.getSessions().iterator();
+    
+    
+    // 세션 체크 및 나간 유저 체크
     List<String> writerList = new ArrayList<>();
     if (messageCheckPush(i, textMessage, writerList, gameRoom.getWriteUser())) {
       for (WebSocketSession sess:gameRoom.getSessions()) {

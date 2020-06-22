@@ -15,16 +15,19 @@ public class GameRoomRepository {
         gameRoomMap = new LinkedHashMap<>();
     }
 
+    // 방찾기 List
     public List<GameRoom> findAllRoom(){
         List<GameRoom> gameRooms = new ArrayList<>(gameRoomMap.values());
         Collections.reverse(gameRooms);
         return gameRooms;
     }
 
+    // 방
     public GameRoom findRoomById(String id){
         return gameRoomMap.get(id);
     }
 
+    // 방 생성.
     public GameRoom createChatRoom(String name){
         GameRoom chatRoom = GameRoom.create(name);
         gameRoomMap.put(chatRoom.getRoomId(), chatRoom);
