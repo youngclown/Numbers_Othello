@@ -35,6 +35,11 @@ public class GameMasterMessage extends Thread {
             }
           }
         }
+      } else {
+        for (WebSocketSession sess:sessions) {
+          // TODO game의 현재 상태 loading
+          // >>>>>>>>>>>>>>>> 항상 시간 체크함.
+        }
       }
       try {
         Thread.sleep(2000L);

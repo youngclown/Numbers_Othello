@@ -25,7 +25,6 @@ public class PlayService {
     } else if(chatMessage.getType() == MessageType.LEAVE){
       gameRoom.getSessions().remove(session);
       gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter());
-
       chatMessage.setMessage(chatMessage.getWriter() + "님이 퇴장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.CHAT){
       chatMessage.setMessage(chatMessage.getWriter() + " : " + chatMessage.getMessage());

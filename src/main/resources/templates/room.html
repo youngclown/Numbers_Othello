@@ -11,7 +11,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+<script>
 
+
+</script>
 
 <span id="userName" sec:authentication="name"></span>님 게임시작합니다.
 <label for="roomId" class="label label-default">방 번호</label>
@@ -23,14 +26,15 @@
 <input type="text" id="message" style="height : 30px; width : 340px" placeholder="내용을 입력하세요" autofocus>
 <button class="btn btn-primary" id="send">전송</button>
 
+
+
+<div id="chatGame" style="width:400px; height: 600px; border:1px solid; background-color : gray"></div>
+
 <button class="btn btn-primary" id="send" onclick="javascript:sendNumber(1)">전송1</button>
 <button class="btn btn-primary" id="send" onclick="javascript:sendNumber(2)">전송2</button>
 <button class="btn btn-primary" id="send" onclick="javascript:sendNumber(3)">전송3</button>
 <button class="btn btn-primary" id="send" onclick="javascript:sendNumber(4)">전송4</button>
 <button class="btn btn-primary" id="send" onclick="javascript:sendNumber(5)">전송5</button>
-
-
-<div>
 
 </div>
 
