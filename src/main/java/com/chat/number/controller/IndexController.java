@@ -11,9 +11,9 @@ public class IndexController implements ErrorController {
 
   @Override
   @RequestMapping(PATH)
-  @ResponseBody
+//  @ResponseBody
   public String getErrorPath() {
-    return "/index";
+    return "/login";
   }
 
 }
