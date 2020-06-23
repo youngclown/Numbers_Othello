@@ -1,8 +1,12 @@
 package com.chat.number.domain.entity;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 /**
@@ -10,7 +14,9 @@ import java.util.Objects;
  *  POJO(Plain Old Java Object) 규약을 따라서 작성하게 됩니다.
  *  해당 방식을 벗어날 경우, ORM이 변환을 제대로 수행되지 못합니다.
  */
+@NoArgsConstructor(access = AccessLevel.PROTECTED)  // 객체에 대한 생성자를 하나로 두고 그것을 @Builder을 통해서 사용하는 것이 효율적
 @Entity
+@Table(name = "post")
 public class PostEntity {
 
   @Id
