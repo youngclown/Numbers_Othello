@@ -1,5 +1,6 @@
 package com.chat.number.service;
 
+import com.chat.number.domain.GameRoom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -10,15 +11,17 @@ import java.util.*;
 //
 @Slf4j
 public class GameMasterMessage extends Thread {
-  Set<WebSocketSession> sessions;
-  Map<String,String> writeUser;
-  public GameMasterMessage(Set<WebSocketSession> sessions, Map<String,String> writeUser) {
-    this.sessions = sessions;
-    this.writeUser = writeUser;
+  GameRoom gameRoom;
+
+  public GameMasterMessage(GameRoom gameRoom) {
+    this.gameRoom = gameRoom;
   }
 
   public void run()
   {
+    Set<WebSocketSession> sessions = this.gameRoom.getSessions();
+    Map<String,String> writeUser = this.gameRoom.getWriteUser();
+
     // game master는 항시 동작. geme play를 check.
     while (true) {
       Iterator<WebSocketSession> i = sessions.iterator();
@@ -35,12 +38,8 @@ public class GameMasterMessage extends Thread {
             }
           }
         }
-      } else {
-        for (WebSocketSession sess:sessions) {
-          // TODO game의 현재 상태 loading
-          // >>>>>>>>>>>>>>>> 항상 시간 체크함.
-        }
       }
+
       try {
         Thread.sleep(2000L);
       } catch (Exception e) {

@@ -1,7 +1,9 @@
 package com.chat.number.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,31 +18,16 @@ import java.util.Objects;
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 객체에 대한 생성자를 하나로 두고 그것을 @Builder을 통해서 사용하는 것이 효율적
 @Entity
+@Getter
+@Setter
 @Table(name = "post")
 public class PostEntity {
 
   @Id
   @GeneratedValue
   private Long Id;
-
   private String title;
   private String content;
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
 
   @Override
   public boolean equals(Object o) {

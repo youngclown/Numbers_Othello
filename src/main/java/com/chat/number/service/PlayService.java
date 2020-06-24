@@ -4,6 +4,7 @@ import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
 import com.chat.number.type.MessageType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,6 +17,9 @@ import java.util.Map;
 
 @Service
 public class PlayService {
+
+  @Autowired
+  RedisService redisService;
 
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     if(chatMessage.getType() == MessageType.ENTER){
@@ -30,6 +34,7 @@ public class PlayService {
       chatMessage.setMessage(chatMessage.getWriter() + " : " + chatMessage.getMessage());
     } else if (chatMessage.getType() == MessageType.GAME) {
       String gameRule = "GAME^^1";
+      redisService.saveGameRule(chatMessage.getChatRoomId(),gameRule);
       chatMessage.setMessage(gameRule);
     }
     send(gameRoom, chatMessage,objectMapper);
@@ -52,7 +57,11 @@ public class PlayService {
     }
   }
 
-  public static boolean messageCheckPush (Iterator<WebSocketSession> i, TextMessage textMessage, List<String> writerList, Map<String,String> writeUser) {
+  // 메시지를 push 합니다. push 된 데이터가 에러(세선이 없을 경우) 해당 유저가 퇴장했다고 표기합니다.
+  public static boolean messageCheckPush (Iterator<WebSocketSession> i,
+                                          TextMessage textMessage,
+                                          List<String> writerList,
+                                          Map<String,String> writeUser) {
     boolean removeCheck = false;
     while (i.hasNext()) {
       WebSocketSession sess = i.next(); // must be called before you can call i.remove()
