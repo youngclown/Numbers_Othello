@@ -2,6 +2,7 @@ package com.chat.number.service;
 
 import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
+import com.chat.number.model.GameUser;
 import com.chat.number.type.MessageType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,11 @@ public class MessageCheckService {
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     if(chatMessage.getType() == MessageType.ENTER){
       gameRoom.getSessions().add(session);
-      gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter());
+//      gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter()); // TODO 게임유저 생성
       chatMessage.setMessage(chatMessage.getWriter() + "님이 입장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.LEAVE){
       gameRoom.getSessions().remove(session);
-      gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter());
+//      gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter()); // TODO
       chatMessage.setMessage(chatMessage.getWriter() + "님이 퇴장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.CHAT){
       chatMessage.setMessage(chatMessage.getWriter() + " : " + chatMessage.getMessage());
@@ -64,7 +65,7 @@ public class MessageCheckService {
   public static boolean messageCheckPush (Iterator<WebSocketSession> i,
                                           TextMessage textMessage,
                                           List<String> writerList,
-                                          Map<String,String> writeUser) {
+                                          Map<String,GameUser> writeUser) {
     boolean removeCheck = false;
     while (i.hasNext()) {
       WebSocketSession sess = i.next(); // must be called before you can call i.remove()
@@ -72,7 +73,7 @@ public class MessageCheckService {
         sess.sendMessage(textMessage);
       } catch (Exception e) {
         removeCheck = true;
-        writerList.add(writeUser.get(sess.getId()));
+        writerList.add(writeUser.get(sess.getId()).getUsername());
         i.remove();
       }
     }

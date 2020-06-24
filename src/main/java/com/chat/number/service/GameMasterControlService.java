@@ -1,6 +1,7 @@
 package com.chat.number.service;
 
 import com.chat.number.domain.GameRoom;
+import com.chat.number.model.GameUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,7 +21,7 @@ public class GameMasterControlService extends Thread {
   public void run()
   {
     Set<WebSocketSession> sessions = this.gameRoom.getSessions();
-    Map<String,String> writeUser = this.gameRoom.getWriteUser();
+    Map<String, GameUser> writeUser = this.gameRoom.getWriteUser();
 
     // game master는 항시 동작. geme play를 check.
     while (true) {
