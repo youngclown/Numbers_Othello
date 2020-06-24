@@ -16,10 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PlayService {
+public class MessageCheckService {
 
-  @Autowired
-  RedisService redisService;
+  final RedisService redisService;
+
+  public MessageCheckService(RedisService redisService) {
+    this.redisService = redisService;
+  }
 
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     if(chatMessage.getType() == MessageType.ENTER){
@@ -34,7 +37,7 @@ public class PlayService {
       chatMessage.setMessage(chatMessage.getWriter() + " : " + chatMessage.getMessage());
     } else if (chatMessage.getType() == MessageType.GAME) {
       String gameRule = "GAME^^1";
-      redisService.saveGameRule(chatMessage.getChatRoomId(),gameRule);
+      redisService.saveGameRoomId(chatMessage.getChatRoomId(),gameRule);
       chatMessage.setMessage(gameRule);
     }
     send(gameRoom, chatMessage,objectMapper);

@@ -13,9 +13,20 @@ public class RedisService {
     this.redisTemplate = redisTemplate;
   }
 
-  public void saveGameRule(String key, String value) {
+  // 사용자의
+  public void saveGameRoomId(String key, String value) {
     //get/set을 위한 객체
     ValueOperations<String, Object> vop = redisTemplate.opsForValue();
     vop.set(key, value);
   }
+
+  // 사용자의
+  public void getGameRoomId(String key) {
+    //get/set을 위한 객체
+    ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+    String value = String.valueOf(vop.get("key"));
+    System.out.println(value);
+  }
+
+
 }

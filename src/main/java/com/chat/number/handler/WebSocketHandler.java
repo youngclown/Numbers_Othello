@@ -3,7 +3,7 @@ package com.chat.number.handler;
 import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
 import com.chat.number.repository.GameRoomRepository;
-import com.chat.number.service.PlayService;
+import com.chat.number.service.MessageCheckService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final GameRoomRepository gameRoomRepository;
     private final ObjectMapper objectMapper;
-    private final PlayService playService;
+    private final MessageCheckService playService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

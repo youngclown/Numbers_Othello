@@ -10,10 +10,10 @@ import java.util.*;
 
 //
 @Slf4j
-public class GameMasterMessage extends Thread {
+public class GameMasterControlService extends Thread {
   GameRoom gameRoom;
 
-  public GameMasterMessage(GameRoom gameRoom) {
+  public GameMasterControlService(GameRoom gameRoom) {
     this.gameRoom = gameRoom;
   }
 
@@ -27,7 +27,7 @@ public class GameMasterMessage extends Thread {
       Iterator<WebSocketSession> i = sessions.iterator();
       List<String> writerList = new ArrayList<>();
       TextMessage textMessage = new TextMessage((new Date()).toString());
-      if (PlayService.messageCheckPush(i, textMessage, writerList, writeUser)) {
+      if (MessageCheckService.messageCheckPush(i, textMessage, writerList, writeUser)) {
         for (WebSocketSession sess:sessions) {
           for (String writer:writerList) {
             textMessage = new TextMessage(writer + "님이 퇴장하셨습니다.");
