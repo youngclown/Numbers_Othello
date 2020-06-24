@@ -1,6 +1,8 @@
 package com.chat.number.service;
 
 import com.chat.number.type.CheckerBoardRangeType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +28,9 @@ public class GamePlayService {
   }
 
   public void gamePlay () {
+    // User 정보 가져오기
+//    User activeUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
   }
 }

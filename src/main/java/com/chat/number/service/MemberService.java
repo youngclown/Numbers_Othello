@@ -33,6 +33,7 @@ public class MemberService implements UserDetailsService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
     Optional<MemberEntity> userEntityWrapper = memberRepository.findByEmail(userEmail);
     MemberEntity userEntity = userEntityWrapper.get();
@@ -47,4 +48,9 @@ public class MemberService implements UserDetailsService {
 
     return new User(userEntity.getEmail(), userEntity.getPassword(), authorities);
   }
+
+
+
+
+
 }
