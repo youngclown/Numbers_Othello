@@ -17,10 +17,10 @@ public class MemberEntity {
   private Long id;
 
   @Column(length = 20, nullable = false)
-  private String email;
+  private String name;
 
   @Column(length = 20, nullable = false)
-  private String name;
+  private String email;
 
   @Column(length = 100, nullable = false)
   private String password;

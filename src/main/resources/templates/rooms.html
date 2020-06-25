@@ -28,6 +28,9 @@
                     <span th:if="${room.roomUserCount < room.roomMaxCount}">
                         <a class="btn btn-primary" th:href="@{/rooms/{id} (id = ${room.roomId})}">입장</a>
                     </span>
+                    <span th:if="${room.roomUserCount >= room.roomMaxCount}">
+					    <spen class="btn btn-danger">완료</spen>
+                    </span>
                 </td>
             </tr>
         </tbody>

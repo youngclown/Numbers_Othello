@@ -20,25 +20,31 @@ public class GameMasterControlService extends Thread {
 
   public void run() {
     Set<WebSocketSession> sessions = this.gameRoom.getSessions();
-    Map<String, String> writeUser = this.gameRoom.getWriteUser();
-    Map<String, GameUser> gameUser = new HashMap<>();
-
-    Set<String> userList = writeUser.keySet();
-
-    for (String sessionId : userList) {
-      String name = writeUser.get(sessionId);
-      gameUser.put(name, new GameUser(name));
-    }
+    Map<String, GameUser> writeUser = this.gameRoom.getWriteUser();
 
     // game master는 항시 동작. geme play를 check.
     while (true) {
       Iterator<WebSocketSession> i = sessions.iterator();
       List<String> writerList = new ArrayList<>();
-      TextMessage textMessage = new TextMessage((new Date()).toString());
-      if (MessageCheckService.messageCheckPush(i, textMessage, writerList, writeUser)) {
+      String gameRule = "";
+
+      TextMessage textMessage = new TextMessage(gameRule);
+      boolean removeCheck = false;
+      while (i.hasNext()) {
+        WebSocketSession sess = i.next(); // must be called before you can call i.remove()
+        try {
+          sess.sendMessage(textMessage);
+        } catch (Exception e) {
+          removeCheck = true;
+          writerList.add(writeUser.get(sess.getId()).getUsername());
+          i.remove();
+        }
+      }
+
+      if (removeCheck) {
         for (WebSocketSession sess : sessions) {
           for (String writer : writerList) {
-            textMessage = new TextMessage(writer + "님이 퇴장하셨습니다.");
+            textMessage = new TextMessage(writer + " bye");
             try {
               sess.sendMessage(textMessage);
             } catch (IOException e) {
@@ -49,7 +55,7 @@ public class GameMasterControlService extends Thread {
       }
 
       try {
-        Thread.sleep(2000L);
+        Thread.sleep(1000L);
       } catch (Exception e) {
         log.info("Thread.sleep {}", e.getMessage());
       }

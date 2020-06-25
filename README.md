@@ -73,3 +73,5 @@ iptables: 방화벽 규칙을 지웁니다:                          [  OK  ]
 iptables: 모듈을 언로드하는 중:                            [  OK  ]
 iptables: 방화벽 규칙 적용 중:                             [  OK  ]
 ```
+
+# Redis 설치 및 계정 생성
