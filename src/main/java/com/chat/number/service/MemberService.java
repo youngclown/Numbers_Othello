@@ -34,13 +34,13 @@ public class MemberService implements UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-    Optional<MemberEntity> userEntityWrapper = memberRepository.findByEmail(userEmail);
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Optional<MemberEntity> userEntityWrapper = memberRepository.findByEmail(username);
     MemberEntity userEntity = userEntityWrapper.get();
 
     List<GrantedAuthority> authorities = new ArrayList<>();
 
-    if (("admin@example.com").equals(userEmail)) {
+    if (("admin@example.com").equals(username)) {
       authorities.add(new SimpleGrantedAuthority(RoleType.ADMIN.getValue()));
     } else {
       authorities.add(new SimpleGrantedAuthority(RoleType.MEMBER.getValue()));

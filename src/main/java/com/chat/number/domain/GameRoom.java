@@ -14,7 +14,9 @@ public class GameRoom {
     private String roomId;
     private String name;
     private boolean gameStart = false;
+    private int roomUserCount = 0;
+    private int roomMaxCount = 2;
 
     private Set<WebSocketSession> sessions = new HashSet<>();   // 세션 유저 정보
-    private Map<String, GameUser> writeUser = new HashMap<>();     // 실제 유저 정보
+    private Map<String, String> writeUser = new HashMap<>();     // 실제 유저 정보
 }

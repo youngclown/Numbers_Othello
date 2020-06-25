@@ -21,13 +21,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="room : ${rooms}">
-            <td th:text="${room.roomId}"></td>
-            <td th:text="${room.name}"></td>
-            <td>
-                <a class="btn btn-primary" th:href="@{/rooms/{id} (id = ${room.roomId})}">입장</a>
-            </td>
-        </tr>
+            <tr th:each="room : ${rooms}">
+                <td th:text="${room.name}"></td>
+                <td th:text="|${room.roomUserCount} / ${room.roomMaxCount}|"></td>
+                <td>
+                    <span th:if="${room.roomUserCount < room.roomMaxCount}">
+                        <a class="btn btn-primary" th:href="@{/rooms/{id} (id = ${room.roomId})}">입장</a>
+                    </span>
+                </td>
+            </tr>
         </tbody>
     </table>
     <a class="btn btn-primary pull-right" href="/new">새로 만들기</a>

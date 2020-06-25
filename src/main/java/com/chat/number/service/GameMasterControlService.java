@@ -18,10 +18,17 @@ public class GameMasterControlService extends Thread {
     this.gameRoom = gameRoom;
   }
 
-  public void run()
-  {
+  public void run() {
     Set<WebSocketSession> sessions = this.gameRoom.getSessions();
-    Map<String, GameUser> writeUser = this.gameRoom.getWriteUser();
+    Map<String, String> writeUser = this.gameRoom.getWriteUser();
+    Map<String, GameUser> gameUser = new HashMap<>();
+
+    Set<String> userList = writeUser.keySet();
+
+    for (String sessionId : userList) {
+      String name = writeUser.get(sessionId);
+      gameUser.put(name, new GameUser(name));
+    }
 
     // game master는 항시 동작. geme play를 check.
     while (true) {
@@ -29,8 +36,8 @@ public class GameMasterControlService extends Thread {
       List<String> writerList = new ArrayList<>();
       TextMessage textMessage = new TextMessage((new Date()).toString());
       if (MessageCheckService.messageCheckPush(i, textMessage, writerList, writeUser)) {
-        for (WebSocketSession sess:sessions) {
-          for (String writer:writerList) {
+        for (WebSocketSession sess : sessions) {
+          for (String writer : writerList) {
             textMessage = new TextMessage(writer + "님이 퇴장하셨습니다.");
             try {
               sess.sendMessage(textMessage);

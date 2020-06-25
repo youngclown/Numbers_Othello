@@ -28,17 +28,17 @@ public class MessageCheckService {
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     if(chatMessage.getType() == MessageType.ENTER){
       gameRoom.getSessions().add(session);
-//      gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter()); // TODO 게임유저 생성
-      chatMessage.setMessage(chatMessage.getWriter() + "님이 입장하셨습니다.");
+      gameRoom.getWriteUser().put(session.getId(),chatMessage.getName());
+      chatMessage.setMessage(chatMessage.getName() + "님이 입장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.LEAVE){
       gameRoom.getSessions().remove(session);
-//      gameRoom.getWriteUser().put(session.getId(),chatMessage.getWriter()); // TODO
-      chatMessage.setMessage(chatMessage.getWriter() + "님이 퇴장하셨습니다.");
+      gameRoom.getWriteUser().put(session.getId(),chatMessage.getName());
+      chatMessage.setMessage(chatMessage.getName() + "님이 퇴장하셨습니다.");
     } else if(chatMessage.getType() == MessageType.CHAT){
-      chatMessage.setMessage(chatMessage.getWriter() + " : " + chatMessage.getMessage());
+      chatMessage.setMessage(chatMessage.getName() + " : " + chatMessage.getMessage());
     } else if (chatMessage.getType() == MessageType.GAME) {
       String gameRule = "GAME^^1";
-      redisService.saveGameRoomId(chatMessage.getChatRoomId(),gameRule);
+//      redisService.saveGameRoomId(chatMessage.getChatRoomId(),gameRule);
       chatMessage.setMessage(gameRule);
     }
     send(gameRoom, chatMessage,objectMapper);
@@ -65,7 +65,7 @@ public class MessageCheckService {
   public static boolean messageCheckPush (Iterator<WebSocketSession> i,
                                           TextMessage textMessage,
                                           List<String> writerList,
-                                          Map<String,GameUser> writeUser) {
+                                          Map<String,String> writeUser) {
     boolean removeCheck = false;
     while (i.hasNext()) {
       WebSocketSession sess = i.next(); // must be called before you can call i.remove()
@@ -73,7 +73,7 @@ public class MessageCheckService {
         sess.sendMessage(textMessage);
       } catch (Exception e) {
         removeCheck = true;
-        writerList.add(writeUser.get(sess.getId()).getUsername());
+        writerList.add(writeUser.get(sess.getId()));
         i.remove();
       }
     }

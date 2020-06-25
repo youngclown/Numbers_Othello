@@ -27,6 +27,7 @@ public class GameController {
     @GetMapping("/rooms/{id}")
     public String room(@PathVariable String id, Model model){
         GameRoom room = gameRoomRepository.findRoomById(id);
+        room.setRoomUserCount(room.getRoomUserCount()+1);
         model.addAttribute("room",room);
         return "room";
     }

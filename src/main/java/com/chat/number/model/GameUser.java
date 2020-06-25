@@ -11,4 +11,7 @@ public class GameUser {
   int one, two, three, four, five  = 3;
   int six, seven  = 2;
 
+  public GameUser(String username) {
+    this.username = username;
+  }
 }
