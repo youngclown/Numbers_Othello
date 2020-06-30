@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum NumberGoType {
+public enum NumberOthelloType {
   PLAYER_ONE("1"),       // 플레이1
   PLAYER_TWO("2"),       // 플레이2
   BLANK("x"),            // 빈화면

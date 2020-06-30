@@ -2,7 +2,7 @@ package com.chat.number.model;
 
 import java.util.ArrayList;
 
-public class NumberGo {
+public class NumberOthello {
 
 	String type = "";
 	int i = 0;

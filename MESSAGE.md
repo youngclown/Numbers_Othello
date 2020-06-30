@@ -3,7 +3,7 @@ Toy project v.5
 
 GAME^NUMBER
 
-GAME^ROW1_ROW2_ROW3
+ROW1_ROW2_ROW3
 ```
   PLAYER_ONE = PO
   PLAYER_TWO = PT
@@ -12,3 +12,4 @@ GAME^ROW1_ROW2_ROW3
   PLAYER_TWO_BLOCK = PTB
 ```
 ex : P0^1_B^0_PTB^0................................
+_로 split 할 경우 
