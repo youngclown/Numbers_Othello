@@ -11,10 +11,10 @@ import java.util.*;
 
 //
 @Slf4j
-public class GameMasterControlService extends Thread {
+public class MasterControlService extends Thread {
   GameRoom gameRoom;
 
-  public GameMasterControlService(GameRoom gameRoom) {
+  public MasterControlService(GameRoom gameRoom) {
     this.gameRoom = gameRoom;
   }
 

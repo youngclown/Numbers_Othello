@@ -1,7 +1,7 @@
 package com.chat.number.repository;
 
 import com.chat.number.domain.GameRoom;
-import com.chat.number.service.GameMasterControlService;
+import com.chat.number.service.MasterControlService;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -35,7 +35,7 @@ public class GameRoomRepository {
         gameRoom.setName(name);
 
         // 방생성 후 게임 스타트, 게임 마스터 동작
-        GameMasterControlService t = new GameMasterControlService(gameRoom);
+        MasterControlService t = new MasterControlService(gameRoom);
         t.start();
         
         this.gameRoomMap.put(gameRoom.getRoomId(), gameRoom);
