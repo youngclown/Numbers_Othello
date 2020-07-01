@@ -30,18 +30,17 @@
 <input type="text" id="message" style="height : 30px; width : 340px" placeholder="내용을 입력하세요" autofocus>
 <button class="btn btn-primary" id="send">전송</button>
 
-<button class="btn btn-primary" id="send" onclick="javascript:gameStart()">게임시작</button>
 
+<button class="btn btn-primary" id="send" onclick="sendNumber(1)">전송1</button>
+<button class="btn btn-primary" id="send" onclick="sendNumber(2)">전송2</button>
+<button class="btn btn-primary" id="send" onclick="sendNumber(3)">전송3</button>
+<button class="btn btn-primary" id="send" onclick="sendNumber(4)">전송4</button>
+<button class="btn btn-primary" id="send" onclick="sendNumber(5)">전송5</button>
 
 <div id="chatGame" style="width:400px; height: 600px; border:1px solid; background-color : gray"></div>
 
-<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(1)">전송1</button>
-<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(2)">전송2</button>
-<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(3)">전송3</button>
-<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(4)">전송4</button>
-<button class="btn btn-primary" id="send" onclick="javascript:sendNumber(5)">전송5</button>
 
-</div>
+
 
 
 </body>
@@ -50,11 +49,8 @@
     /* <![CDATA[*/
     let roomId = /*[[${room.roomId}]]*/;
     /* ]]> */
-
     const userNm = document.getElementById('userName').innerHTML;
-
     connect();
-
     document.getElementById("send").addEventListener("click", function () {
         send();
     })
@@ -86,35 +82,35 @@
     }
 
     function onMessage(e) {
-        const data = JSON.parse(e.data);
-        console.log(data);
+        // const data = JSON.parse(e.data);
+        console.log(e);
 
         /**
          *
          *
 
          switch(msg.type) {
-    case "id":
-      clientID = msg.id;
-      setUsername();
-      break;
-    case "username":
-      text = "<b>User <em>" + msg.name + "</em> signed in at " + timeStr + "</b><br>";
-      break;
-    case "message":
-      text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
-      break;
-    case "rejectusername":
-      text = "<b>Your username has been set to <em>" + msg.name + "</em> because the name you chose is in use.</b><br>"
-      break;
-    case "userlist":
-      var ul = "";
-      for (i=0; i < msg.users.length; i++) {
-        ul += msg.users[i] + "<br>";
-      }
-      document.getElementById("userlistbox").innerHTML = ul;
-      break;
-  }
+            case "id":
+              clientID = msg.id;
+              setUsername();
+              break;
+            case "username":
+              text = "<b>User <em>" + msg.name + "</em> signed in at " + timeStr + "</b><br>";
+              break;
+            case "message":
+              text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
+              break;
+            case "rejectusername":
+              text = "<b>Your username has been set to <em>" + msg.name + "</em> because the name you chose is in use.</b><br>"
+              break;
+            case "userlist":
+              var ul = "";
+              for (i=0; i < msg.users.length; i++) {
+                ul += msg.users[i] + "<br>";
+          }
+          document.getElementById("userlistbox").innerHTML = ul;
+          break;
+        }
 
          if (text.length) {
     f.write(text);
@@ -124,8 +120,8 @@
 
          *
 
-        const data = JSON.stringify(e.data);
-        if (data.indexOf("GR^^")) {
+         const data = JSON.stringify(e.data);
+         if (data.indexOf("GR^^")) {
             // var tempData = data.replace("GAME^^","")
             // chatroom.innerHTML = chatroom.innerHTML + "<br>" + tempData;
 

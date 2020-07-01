@@ -2,6 +2,9 @@ package com.chat.number.service;
 
 import com.chat.number.domain.GameRoom;
 import com.chat.number.model.GameUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,23 +15,38 @@ import java.util.*;
 //
 @Slf4j
 public class MasterControlService extends Thread {
-  GameRoom gameRoom;
+  GameRoom gameRoom;  // 세션 유지
+  private final ObjectMapper objectMapper;
 
-  public MasterControlService(GameRoom gameRoom) {
+  public MasterControlService(GameRoom gameRoom, ObjectMapper objectMapper) {
     this.gameRoom = gameRoom;
+    this.objectMapper = objectMapper;
   }
 
+  @SneakyThrows
   public void run() {
     Set<WebSocketSession> sessions = this.gameRoom.getSessions();
     Map<String, GameUser> writeUser = this.gameRoom.getWriteUser();
 
+    int count = 0;
+
     // game master는 항시 동작. geme play를 check.
     while (true) {
+
+      count++;
+
+      // 1. 전체 Check 판을 체크합니다.
+
+
       Iterator<WebSocketSession> i = sessions.iterator();
       List<String> writerList = new ArrayList<>();
-      String gameRule = "";
-
+      String gameRule = objectMapper.writeValueAsString(new Date().getTime() + " -_-");
       TextMessage textMessage = new TextMessage(gameRule);
+
+
+
+
+
       boolean removeCheck = false;
       while (i.hasNext()) {
         WebSocketSession sess = i.next(); // must be called before you can call i.remove()
@@ -41,14 +59,22 @@ public class MasterControlService extends Thread {
         }
       }
 
+
+      // 2. score 를 관리합니다.
+
+      
+      
+      
+      
+      // 3. 나간 User 체크
       if (removeCheck) {
         for (WebSocketSession sess : sessions) {
           for (String writer : writerList) {
-            textMessage = new TextMessage(writer + " bye");
-            try {
+            String json = objectMapper.writeValueAsString(writer + " bye");
+            if (json != null) {
+              textMessage = new TextMessage(json);
+              log.info(json);
               sess.sendMessage(textMessage);
-            } catch (IOException e) {
-              log.info("removeCheck {}", e.getMessage());
             }
           }
         }

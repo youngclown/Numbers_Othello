@@ -2,6 +2,7 @@ package com.chat.number.repository;
 
 import com.chat.number.domain.GameRoom;
 import com.chat.number.service.MasterControlService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +11,11 @@ import java.util.*;
 @Repository
 public class GameRoomRepository {
     private Map<String, GameRoom> gameRoomMap;
+    private final ObjectMapper objectMapper;
+
+    public GameRoomRepository(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @PostConstruct
     private void init(){
@@ -35,7 +41,7 @@ public class GameRoomRepository {
         gameRoom.setName(name);
 
         // 방생성 후 게임 스타트, 게임 마스터 동작
-        MasterControlService t = new MasterControlService(gameRoom);
+        MasterControlService t = new MasterControlService(gameRoom, objectMapper);
         t.start();
         
         this.gameRoomMap.put(gameRoom.getRoomId(), gameRoom);
