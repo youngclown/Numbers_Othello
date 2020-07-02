@@ -70,3 +70,41 @@ iptables: 방화벽 규칙 적용 중:                             [  OK  ]
 ```
 
 # Redis 설치 및 계정 생성
+
+
+1. redis 설치 (epel, remi 저장소는 기본적으로  활성화되지 않으므로 --enablerepo 옵션을 줌.
+
+```shell script
+[root@localhost ~]# rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+....
+...
+..  
+[root@localhost ~]# yum --enablerepo=epel,remi install redis  
+```
+
+2. 부팅시 자동 실행하도록 설정
+
+```shell script
+[root@localhost ~]# chkconfig redis on  
+```
+
+3. 비밀번호와 외부 접속을 허용
+
+```shell script
+[root@localhost ~]# vi /etc/redis.conf  
+requirepass 1234
+bind 0.0.0.0
+```
+
+4. redis 구동
+
+```shell script
+[root@localhost ~]# service redis restart    
+[root@localhost ~]# netstat -nap | grep LISTEN
+tcp   0   0   127.0.0.1:6379   0.0.0.0:*    LISTEN     1534/redis-server 1
+```
+
+
+
+
+  
