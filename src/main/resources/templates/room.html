@@ -7,117 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
-<script th:inline="javascript">
-    let webSocket;
-    /* <![CDATA[*/
-    let roomId = '/*[[${room.roomId}]]*/';
-    /* ]]> */
-    const userNm = document.getElementById('userName').innerHTML;
-    connect();
-    document.getElementById("send").addEventListener("click", function () {
-        send();
-    })
-
-
-    var check = false;
-    var numberChoice = 0;
-
-    function sendNumber(number) {
-        if (check === true) {
-            webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'GAME', writer: userNm, message: number}));
-        } else {
-            const chatroom = document.getElementById("chatroom");
-            chatroom.innerHTML = chatroom.innerHTML + "<br>" + "숫자 버튼을 선택해주세요";
-
-        }
-    }
-
-    function choiceNumber(number) {
-        check = true;
-        numberChoice = number;
-    }
-
-
-    function connect() {
-        webSocket = new WebSocket("ws://localhost:8080/chat");
-        webSocket.onopen = onOpen;
-        webSocket.onclose = onClose;
-        webSocket.onmessage = onMessage;
-    }
-
-    function disconnect() {
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'LEAVE', writer: userNm}));
-        webSocket.close();
-    }
-
-    function send() {
-        const msg = document.getElementById("message").value;
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', writer: userNm, message: msg}));
-        document.getElementById("message").value = "";
-    }
-
-    function onOpen() {
-        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: userNm}));
-    }
-
-    function onMessage(e) {
-        // const data = JSON.parse(e.data);
-        console.log(e);
-
-        /**
-         *
-         *
-
-         switch(msg.type) {
-            case "id":
-              clientID = msg.id;
-              setUsername();
-              break;
-            case "username":
-              text = "<b>User <em>" + msg.name + "</em> signed in at " + timeStr + "</b><br>";
-              break;
-            case "message":
-              text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
-              break;
-            case "rejectusername":
-              text = "<b>Your username has been set to <em>" + msg.name + "</em> because the name you chose is in use.</b><br>"
-              break;
-            case "userlist":
-              var ul = "";
-              for (i=0; i < msg.users.length; i++) {
-                ul += msg.users[i] + "<br>";
-          }
-          document.getElementById("userlistbox").innerHTML = ul;
-          break;
-        }
-
-         if (text.length) {
-    f.write(text);
-    document.getElementById("chatbox").contentWindow.scrollByPages(1);
-  }
-
-
-         *
-
-         const data = JSON.stringify(e.data);
-         if (data.indexOf("GR^^")) {
-            // var tempData = data.replace("GAME^^","")
-            // chatroom.innerHTML = chatroom.innerHTML + "<br>" + tempData;
-
-            document.getElementById("roomUserCount").value = "";
-
-        } else {
-            const chatroom = document.getElementById("chatroom");
-            chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
-        }
-         */
-    }
-
-    function onClose() {
-        disconnect();
-    }
-
-</script>
 
 <span id="userName" sec:authentication="name"></span>님 게임시작합니다.
 <label for="roomId" class="label label-default">방 번호</label>
@@ -232,4 +121,113 @@
 
 
 </body>
+
+<script th:inline="javascript">
+    let webSocket;
+    /* <![CDATA[*/
+    let roomId = [[${room.roomId}]];
+    /* ]]> */
+    let userNm = document.getElementById('userName').innerHTML;
+    connect();
+    document.getElementById("send").addEventListener("click", function () {
+        send();
+    })
+
+
+    var check = false;
+    var numberChoice = 0;
+
+    function sendNumber(number) {
+        if (check === true) {
+            webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'GAME', writer: userNm, message: number}));
+        } else {
+            const chatroom = document.getElementById("chatroom");
+            chatroom.innerHTML = chatroom.innerHTML + "<br>" + "숫자 버튼을 선택해주세요";
+
+        }
+    }
+
+    function choiceNumber(number) {
+        check = true;
+        numberChoice = number;
+    }
+
+
+    function connect() {
+        webSocket = new WebSocket("ws://localhost:8080/chat");
+        webSocket.onopen = onOpen;
+        webSocket.onclose = onClose;
+        webSocket.onmessage = onMessage;
+    }
+
+    function disconnect() {
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'LEAVE', writer: userNm}));
+        webSocket.close();
+    }
+
+    function send() {
+        const msg = document.getElementById("message").value;
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'CHAT', writer: userNm, message: msg}));
+        document.getElementById("message").value = "";
+    }
+
+    function onOpen() {
+        webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: userNm}));
+    }
+
+    function onMessage(e) {
+        // const data = JSON.parse(e.data);
+        console.log(e);
+        const data = JSON.stringify(e.data);
+        if (data.indexOf("GR^^")) {
+            document.getElementById("roomUserCount").value = "";
+        } else {
+            const chatroom = document.getElementById("chatroom");
+            chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
+        }
+
+        /**
+         *
+         *
+
+         switch(msg.type) {
+            case "id":
+              clientID = msg.id;
+              setUsername();
+              break;
+            case "username":
+              text = "<b>User <em>" + msg.name + "</em> signed in at " + timeStr + "</b><br>";
+              break;
+            case "message":
+              text = "(" + timeStr + ") <b>" + msg.name + "</b>: " + msg.text + "<br>";
+              break;
+            case "rejectusername":
+              text = "<b>Your username has been set to <em>" + msg.name + "</em> because the name you chose is in use.</b><br>"
+              break;
+            case "userlist":
+              var ul = "";
+              for (i=0; i < msg.users.length; i++) {
+                ul += msg.users[i] + "<br>";
+          }
+          document.getElementById("userlistbox").innerHTML = ul;
+          break;
+        }
+
+         if (text.length) {
+    f.write(text);
+    document.getElementById("chatbox").contentWindow.scrollByPages(1);
+  }
+
+
+         *
+
+
+         */
+    }
+
+    function onClose() {
+        disconnect();
+    }
+
+</script>
 </html>

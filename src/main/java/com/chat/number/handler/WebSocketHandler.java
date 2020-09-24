@@ -6,6 +6,7 @@ import com.chat.number.repository.GameRoomRepository;
 import com.chat.number.service.MessageCheckService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -31,6 +32,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         super.afterConnectionClosed(session, status);
     }
 
+    @SneakyThrows
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("메세지 전송 = {} : {}",session,message.getPayload());
