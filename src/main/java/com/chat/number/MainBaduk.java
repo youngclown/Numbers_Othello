@@ -25,25 +25,25 @@ public class MainBaduk {
 		 * WL : WHITE BLOCK
 		 */
 		ArrayList<NumberOthello> list = new ArrayList<>();
-		NumberOthello baduk;
+		NumberOthello othello;
 		
 		int width = 0;
 		int height = 0;
 		
 		for (int i = 0; i < DEFAULT_NUM*DEFAULT_NUM; i++) {
-			baduk = new NumberOthello();
-			baduk.setType("N");
+			othello = new NumberOthello();
+			othello.setType("N");
 			
 			if ((i+1) % DEFAULT_NUM == 0) {
-				baduk.setI(width++);
-				baduk.setJ(height);
+				othello.setI(width++);
+				othello.setJ(height);
 				height = 0;
 			} else {
-				baduk.setI(width);
-				baduk.setJ(height++);
+				othello.setI(width);
+				othello.setJ(height++);
 			}
 			
-			list.add(baduk);
+			list.add(othello);
 		}
 		
 	

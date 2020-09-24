@@ -2,14 +2,12 @@ package com.chat.number.service;
 
 import com.chat.number.domain.GameRoom;
 import com.chat.number.model.GameUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.*;
 
 //
@@ -36,15 +34,10 @@ public class MasterControlService extends Thread {
       count++;
 
       // 1. 전체 Check 판을 체크합니다.
-
-
       Iterator<WebSocketSession> i = sessions.iterator();
       List<String> writerList = new ArrayList<>();
       String gameRule = objectMapper.writeValueAsString(new Date().getTime() + " -_-");
       TextMessage textMessage = new TextMessage(gameRule);
-
-
-
 
 
       boolean removeCheck = false;
@@ -61,6 +54,7 @@ public class MasterControlService extends Thread {
 
 
       // 2. score 를 관리합니다.
+
 
       
       

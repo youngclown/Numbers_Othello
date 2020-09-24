@@ -26,13 +26,25 @@ public class MessageCheckService {
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
     if(chatMessage.getType() == MessageType.ENTER){
       gameRoom.getSessions().add(session);
-      gameRoom.getWriteUser().put(session.getId(),new GameUser(chatMessage.getName())); // TODO 정합성 맞추는 작업이 필요함.
+      gameRoom.setRoomUserCount(gameRoom.getRoomUserCount()+1);
+      gameRoom.getWriteUser().put(session.getId(),new GameUser(chatMessage.getName(),gameRoom.getRoomUserCount() == 0 ? "B" : "W")); // TODO 정합성 맞추는 작업이 필요함.
       chatMessage.setMessage(chatMessage.getName() + " hello");
     }
     else if(chatMessage.getType() == MessageType.CHAT){
       chatMessage.setMessage(chatMessage.getName() + " : " + chatMessage.getMessage());
     } else if (chatMessage.getType() == MessageType.GAME) {
-      gameRoom.setRuleChange(true);
+
+      String gameRule = chatMessage.getMessage();
+      String[] number = gameRule.split("##");
+      String numberOthello = number[0];
+      String numberChoice = number[1];
+
+      GameUser gameUser = gameRoom.getWriteUser().get(session.getId());
+      GamePlayService gamePlayService = gameRoom.getGamePlayService();
+      gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
+
+
+//      gameRoom.setRuleChange(true);
     }
     send(gameRoom, chatMessage,objectMapper);
   }

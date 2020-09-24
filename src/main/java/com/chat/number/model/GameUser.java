@@ -7,11 +7,14 @@ import lombok.Setter;
 @Setter
 public class GameUser {
   String username;
+  String type;
 
-  int one, two, three, four, five  = 3;
-  int six, seven  = 2;
+  int one, two = 4;
+  int three, four, five, six  = 3;
+  int seven  = 4;
 
-  public GameUser(String username) {
+  public GameUser(String username, String type) {
     this.username = username;
+    this.type = type;
   }
 }
