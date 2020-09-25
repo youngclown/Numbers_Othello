@@ -188,12 +188,12 @@ public class MainBaduk {
 				}
 			}
 		}
-		
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getValue() > 0) {
-				if (type.equals(list.get(i).getType())){
-					score += list.get(i).getValue();
-				} else if ((type+"L").equals(list.get(i).getType())){
+
+		for (NumberOthello numberOthello : list) {
+			if (numberOthello.getValue() > 0) {
+				if (type.equals(numberOthello.getType())) {
+					score += numberOthello.getValue();
+				} else if ((type + "L").equals(numberOthello.getType())) {
 					score++;
 				}
 			}

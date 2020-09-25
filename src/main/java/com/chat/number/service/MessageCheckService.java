@@ -4,14 +4,15 @@ import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
 import com.chat.number.model.GameUser;
 import com.chat.number.type.MessageType;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.chat.number.type.NumberOthelloType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
+//import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 @Slf4j
@@ -23,12 +24,18 @@ public class MessageCheckService {
     this.redisService = redisService;
   }
 
-  public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
+  public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws Exception {
     if(chatMessage.getType() == MessageType.ENTER){
       gameRoom.getSessions().add(session);
       gameRoom.setRoomUserCount(gameRoom.getRoomUserCount()+1);
-      gameRoom.getWriteUser().put(session.getId(),new GameUser(chatMessage.getName(),gameRoom.getRoomUserCount() == 0 ? "B" : "W")); // TODO 정합성 맞추는 작업이 필요함.
-      chatMessage.setMessage(chatMessage.getName() + " hello");
+      gameRoom.getWriteUser().put(
+              session.getId(),
+              new GameUser(
+                      chatMessage.getName(),
+                      gameRoom.getRoomUserCount() == 0 ?
+                              NumberOthelloType.PLAYER_ONE.getValue() :
+                              NumberOthelloType.PLAYER_TWO.getValue()));
+      chatMessage.setMessage(chatMessage.getName() + " game join");
     }
     else if(chatMessage.getType() == MessageType.CHAT){
       chatMessage.setMessage(chatMessage.getName() + " : " + chatMessage.getMessage());
@@ -43,20 +50,31 @@ public class MessageCheckService {
       GamePlayService gamePlayService = gameRoom.getGamePlayService();
       gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
 
+      String dspString = new Gson().toJson(gamePlayService.getList());
+      chatMessage.setMessage(dspString);
+//    String dspString = new Gson().toJson(dsps);
+//    Gson gson = new Gson();
+//    Type userListType = new TypeToken<ArrayList<DSPCookie>>() {
+//    }.getType();
+//    dsps = gson.fromJson(dspId, userListType);
 
 //      gameRoom.setRuleChange(true);
     }
-    send(gameRoom, chatMessage,objectMapper);
+    send(gameRoom, chatMessage, objectMapper);
   }
 
-  public void send(GameRoom gameRoom, ChatMessage chatMessage, ObjectMapper objectMapper) throws JsonProcessingException {
-    TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
-    for (WebSocketSession sess : gameRoom.getSessions()) {
-      try {
-        sess.sendMessage(textMessage);
-      } catch (Exception e) {
-        log.info(e.getMessage(),e);
+  public void send(GameRoom gameRoom, ChatMessage chatMessage, ObjectMapper objectMapper)  {
+    try {
+      TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
+      for (WebSocketSession sess : gameRoom.getSessions()) {
+        try {
+          sess.sendMessage(textMessage);
+        } catch (Exception e) {
+          log.info(e.getMessage(),e);
+        }
       }
+    } catch (Exception e) {
+      log.info(e.getMessage(),e);
     }
   }
 }
