@@ -1,9 +1,15 @@
 package com.chat.number.service;
 
 import com.chat.number.domain.GameRoom;
+import com.chat.number.model.GameUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import lombok.SneakyThrows;
+
+import java.util.Map;
+import java.util.Set;
 
 //
 @Slf4j
@@ -18,8 +24,8 @@ public class MasterControlService extends Thread {
 
   @SneakyThrows
   public void run() {
-//    Set<WebSocketSession> sessions = this.gameRoom.getSessions();
-//    Map<String, GameUser> writeUser = this.gameRoom.getWriteUser();
+    Set<WebSocketSession> sessions = this.gameRoom.getSessions();
+    Map<String, GameUser> writeUser = this.gameRoom.getWriteUser();
 //
 //    int count = 0;
 //
