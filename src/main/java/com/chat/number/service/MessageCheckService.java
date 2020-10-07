@@ -6,7 +6,6 @@ import com.chat.number.model.GameUser;
 import com.chat.number.type.MessageType;
 import com.chat.number.type.NumberOthelloType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -41,7 +40,7 @@ public class MessageCheckService {
       chatMessage.setMessage(chatMessage.getName() + " : " + chatMessage.getMessage());
     } else if (chatMessage.getType() == MessageType.GAME) {
 
-      String gameRule = chatMessage.getMessage();
+      String gameRule = (String) chatMessage.getMessage();
       String[] number = gameRule.split("##");
       String numberOthello = number[0];
       String numberChoice = number[1];
@@ -50,8 +49,8 @@ public class MessageCheckService {
       GamePlayService gamePlayService = gameRoom.getGamePlayService();
       gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
 
-      String dspString = new Gson().toJson(gamePlayService.getList());
-      chatMessage.setMessage(dspString);
+//      String dspString = new Gson().toJson(gamePlayService.getList());
+      chatMessage.setMessage(gamePlayService.getList());
 //    String dspString = new Gson().toJson(dsps);
 //    Gson gson = new Gson();
 //    Type userListType = new TypeToken<ArrayList<DSPCookie>>() {

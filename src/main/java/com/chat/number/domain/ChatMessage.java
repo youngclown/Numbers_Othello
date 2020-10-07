@@ -8,6 +8,6 @@ import lombok.Setter;
 public class ChatMessage {
     private String chatRoomId;
     private String name;
-    private String message;
+    private Object message;
     private MessageType type;
 }

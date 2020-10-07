@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 
-public class MainBaduk {
+public class NumberOthelloTest {
 	static int DEFAULT_NUM = 6;
 	static Map<String, String> edgeMap = new HashMap<>();
 
@@ -29,9 +29,11 @@ public class MainBaduk {
 		
 		int width = 0;
 		int height = 0;
-		
+
+		// 초기화 설정 후 list 에 해당 값 삽입.
 		for (int i = 0; i < DEFAULT_NUM*DEFAULT_NUM; i++) {
 			othello = new NumberOthello();
+			othello.setPod(i);
 			othello.setType("N");
 			
 			if ((i+1) % DEFAULT_NUM == 0) {
@@ -54,7 +56,7 @@ public class MainBaduk {
 			}
 		}
 		
-		MainBaduk n = new MainBaduk();
+		NumberOthelloTest n = new NumberOthelloTest();
 		n.init();
 		n.replayList(list, "B");
 		n.replayList(list, "W");
