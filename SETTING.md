@@ -8,8 +8,8 @@ Toy project v.5
 ```shell script
 [root@zabbix1 ~]# vi /etc/yum.repos.d/MariaDB.repo
 [mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/10.4/centos6-amd64
+name=MariaDB
+baseurl=http://yum.mariadb.org/10.4/centos6-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 ```

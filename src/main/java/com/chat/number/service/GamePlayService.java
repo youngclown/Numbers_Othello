@@ -5,11 +5,13 @@ import com.chat.number.type.CheckerBoardRangeType;
 import com.chat.number.type.NumberOthelloType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j
 @Getter
 @Setter
 public class GamePlayService {
@@ -62,6 +64,7 @@ public class GamePlayService {
 
   public void gamePlay(String numberOthello, String numberChoice, String type) {
 
+    // 배열 초기화 작업
     init();
 
     int i = Integer.parseInt(numberOthello);
@@ -69,7 +72,6 @@ public class GamePlayService {
     int width = list.get(i).getI();
     int height = list.get(i).getJ();  //Height
 
-//    list.get(i).setType(type);
     int cnt = 0;
 
     if (width == 0) {
@@ -133,7 +135,7 @@ public class GamePlayService {
        NumberOthelloType.PLAYER_TWO.getValue().equals(othello.getType())){
       if (NumberOthelloType.PLAYER_ONE.getValue().equals(type)){
         othello.setType(NumberOthelloType.PLAYER_ONE_BLOCK.getValue());
-        othello.setValue(1);
+        othello.setValue(1);  // 해당 배열의 '1' 값 설정
       } else if (NumberOthelloType.PLAYER_TWO.getValue().equals(type)){
         othello.setType(NumberOthelloType.PLAYER_TWO_BLOCK.getValue());
         othello.setValue(1);
