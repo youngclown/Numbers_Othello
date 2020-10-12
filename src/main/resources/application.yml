@@ -1,6 +1,6 @@
 spring:
   redis:
-    host: 192.168.56.102
+    host: 192.168.56.101
     password: 1234
     port: 6379
 
@@ -8,7 +8,7 @@ spring:
     #driver-class-name: com.mysql.cj.jdbc.Driver
     #url: jdbc:mysql://192.168.56.101:3306/testdb?serverTimezone=UTC&characterEncoding=UTF-8
     driver-class-name: org.mariadb.jdbc.Driver
-    url : jdbc:mariadb://192.168.56.102:3306/testdb?serverTimezone=UTC&characterEncoding=UTF-8
+    url : jdbc:mariadb://192.168.56.101:3306/testdb?serverTimezone=UTC&characterEncoding=UTF-8
     username: test
     password: 123456
   thymeleaf:
@@ -24,9 +24,11 @@ spring:
   mvc:
     converters:
       preferred-json-mapper: gson
+    static-path-pattern: /static/**
 
-
-
+  resources:
+      static-locations: classpath:/static/
+      add-mappings: true
 
 # spring boot의 기본 properties
 server.error:

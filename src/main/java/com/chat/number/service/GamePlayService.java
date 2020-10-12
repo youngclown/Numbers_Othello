@@ -5,18 +5,18 @@ import com.chat.number.type.CheckerBoardRangeType;
 import com.chat.number.type.NumberOthelloType;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@Log4j
+@Log4j2
 @Getter
 @Setter
 public class GamePlayService {
   public Map<CheckerBoardRangeType, Integer> CHECKERBOARD = new HashMap<>();
-  public ArrayList<NumberOthello> list = new ArrayList<>();
+  public ArrayList<NumberOthello> othelloList = new ArrayList<>();
   final int CHECKERBOARD_SIZE = 7; // 가로 세로 체커보드
 
   public void init() {
@@ -50,7 +50,7 @@ public class GamePlayService {
         othello.setJ(height++);
       }
 
-      list.add(othello);
+      othelloList.add(othello);
     }
   }
 
@@ -69,8 +69,8 @@ public class GamePlayService {
 
     int i = Integer.parseInt(numberOthello);
     int value = Integer.parseInt(numberChoice);
-    int width = list.get(i).getI();
-    int height = list.get(i).getJ();  //Height
+    int width = othelloList.get(i).getI();
+    int height = othelloList.get(i).getJ();  //Height
 
     int cnt = 0;
 
@@ -105,19 +105,19 @@ public class GamePlayService {
     for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
       if (entry.getValue() != -999) {
         System.out.println(i + entry.getValue());
-        cnt += parseList(list.get(i + entry.getValue()));
+        cnt += parseList(othelloList.get(i + entry.getValue()));
       }
     }
 
     if (cnt == value) {
       for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
         if (entry.getValue() != -999) {
-          chageList(type, list.get(i + entry.getValue()));
+          chageList(type, othelloList.get(i + entry.getValue()));
         }
       }
     } else {
-      list.get(i).setType(type);
-      list.get(i).setValue(value);
+      othelloList.get(i).setType(type);
+      othelloList.get(i).setValue(value);
     }
   }
 

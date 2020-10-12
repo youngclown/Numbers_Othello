@@ -2,6 +2,7 @@ package com.chat.number.service;
 
 import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
+import com.chat.number.model.GameMaterRuleJson;
 import com.chat.number.model.GameUser;
 import com.chat.number.type.MessageType;
 import com.chat.number.type.NumberOthelloType;
@@ -45,19 +46,16 @@ public class MessageCheckService {
       String numberOthello = number[0];
       String numberChoice = number[1];
 
+      GameMaterRuleJson gameMaterRuleJson = new GameMaterRuleJson();
       GameUser gameUser = gameRoom.getWriteUser().get(session.getId());
       GamePlayService gamePlayService = gameRoom.getGamePlayService();
       gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
 
-//      String dspString = new Gson().toJson(gamePlayService.getList());
-      chatMessage.setMessage(gamePlayService.getList());
-//    String dspString = new Gson().toJson(dsps);
-//    Gson gson = new Gson();
-//    Type userListType = new TypeToken<ArrayList<DSPCookie>>() {
-//    }.getType();
-//    dsps = gson.fromJson(dspId, userListType);
-
-//      gameRoom.setRuleChange(true);
+      gameMaterRuleJson.setChatRoomId(gameRoom.getRoomId());
+      gameMaterRuleJson.setGame(gamePlayService.getOthelloList());
+      gameMaterRuleJson.setType(MessageType.GAME.name());
+      gameMaterRuleJson.setWriter(gameUser.getUsername());
+      chatMessage.setMessage(gameMaterRuleJson);
     }
     send(gameRoom, chatMessage, objectMapper);
   }
