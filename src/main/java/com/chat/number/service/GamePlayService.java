@@ -54,14 +54,6 @@ public class GamePlayService {
     }
   }
 
-//  public static void main(String[] args) {
-//    GamePlayService gamePlayService = new GamePlayService();
-//    List<NumberOthello> list = gamePlayService.getList();
-//    for (NumberOthello numberOthello: list) {
-//      System.out.println(numberOthello.toString());
-//    }
-//  }
-
   public void gamePlay(String numberOthello, String numberChoice, String type) {
 
     // 배열 초기화 작업
@@ -94,17 +86,8 @@ public class GamePlayService {
       CHECKERBOARD.put(CheckerBoardRangeType.RIGHT_DOWN, -999);
     }
 
-    /*
-     * B : BLACK
-     * W : WHITE
-     * K : BLANK
-     * N : NONE
-     * BL : BLACK BLOCK
-     * WL : WHITE BLOCK
-     */
     for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
       if (entry.getValue() != -999) {
-        System.out.println(i + entry.getValue());
         cnt += parseList(othelloList.get(i + entry.getValue()));
       }
     }

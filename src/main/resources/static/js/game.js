@@ -62,13 +62,21 @@ function onMessage(e) {
     // const data = JSON.stringify(e.data);
 
     if (type === 'GAME') {
-
-    } else if (type === 'GAME_RULE') {
         let game = data.game;
-        for (let i = 0; i < game.lenght; i++) {
-            game[i]
+        for (let i = 0; i < game.length; i++) {
+            if(game[i].type === 'PO') {
+                document.getElementById("send"+i).innerHTML = "PO";
+            } else if(game[i].type === 'PT') {
+                document.getElementById("send"+i).innerHTML = "PT";
+            } else if(game[i].type === 'B') {
+                document.getElementById("send"+i).innerHTML = "B";
+            } else if(game[i].type === 'POB') {
+                document.getElementById("send"+i).innerHTML = "POB";
+            } else if(game[i].type === 'PTB') {
+                document.getElementById("send"+i).innerHTML = "PTB";
+            }
         }
-
+    } else if (type === 'GAME_RULE') {
 
     } else if (type === 'GAME_SCOPE') {
 
@@ -78,7 +86,7 @@ function onMessage(e) {
     // if (data.indexOf("GR^^")) {
     //     document.getElementById("roomUserCount").value = "";
     // } else {
-    const chatroom = document.getElementById("chatroom");
+    // const chatroom = document.getElementById("chatroom");
     // chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
     // }
 
