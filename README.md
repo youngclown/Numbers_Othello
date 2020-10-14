@@ -1,7 +1,7 @@
 Toy project v.5 RULE 
 ---
 
-###게임명 : Numbers Othello
+###게임명 : NUMBERS OTHELLO
 
 0. 소개
    - NxN (7x7) 칸에 숫자를 번갈아 놓습니다.

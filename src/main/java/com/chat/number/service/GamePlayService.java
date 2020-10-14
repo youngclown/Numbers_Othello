@@ -39,7 +39,7 @@ public class GamePlayService {
 
     for (int i = 0; i < CHECKERBOARD_SIZE * CHECKERBOARD_SIZE; i++) {
       NumberOthello othello = new NumberOthello();
-      othello.setType("N");
+      othello.setType(NumberOthelloType.BLANK.getValue());
 
       if ((i + 1) % CHECKERBOARD_SIZE == 0) {
         othello.setI(width++);

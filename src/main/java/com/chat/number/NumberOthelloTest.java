@@ -34,7 +34,7 @@ public class NumberOthelloTest {
 		for (int i = 0; i < DEFAULT_NUM*DEFAULT_NUM; i++) {
 			othello = new NumberOthello();
 			othello.setPod(i);
-			othello.setType("N");
+			othello.setType(NumberOthelloType.BLANK.getValue());
 			
 			if ((i+1) % DEFAULT_NUM == 0) {
 				othello.setI(width++);
@@ -113,7 +113,7 @@ public class NumberOthelloTest {
 	}
 	
 	public void gamePlay(ArrayList<NumberOthello> list, int i, int value, String type){
-		if ("N".equals(list.get(i).getType())) {
+		if (NumberOthelloType.BLANK.getValue().equals(list.get(i).getType())) {
 			playLogic(list, i, value, type);
 		} else {
 			System.out.println("�ٸ� ���� �νñ� �ٶ��ϴ�.");

@@ -4,11 +4,11 @@ Toy project v.5
 # 기본 약어 정의
 
 ```properties
-  PLAYER_ONE = PO               // 구 B
-  PLAYER_TWO = PT               // 구 W
-  BLANK = B                     // 구 L
-  PLAYER_ONE_BLOCK = POB        // 구 BL
-  PLAYER_TWO_BLOCK = PTB        // 구 WL
+  PLAYER_ONE = PO               // 1 player
+  PLAYER_TWO = PT               // 2 player
+  BLANK = B                     // 블랭크
+  PLAYER_ONE_BLOCK = POB        // 1 player 블랭크
+  PLAYER_TWO_BLOCK = PTB        // 1 player 블랭크
   GAME_RULE = GR
   GAME_SCOPE = GS
 ```
