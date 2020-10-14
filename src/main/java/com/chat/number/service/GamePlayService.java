@@ -66,12 +66,8 @@ public class GamePlayService {
     int width = othelloList.get(i).getI();
     int height = othelloList.get(i).getJ();  //Height
 
-
-
-
     // 배열 초기화 작업
     init();
-
 
     int cnt = 0;
 
@@ -101,15 +97,16 @@ public class GamePlayService {
       }
     }
 
+    // 놓은 값을 알아서 셋팅합니다!
+    othelloList.get(i).setType(type);
+    othelloList.get(i).setValue(value);
+
     if (cnt == value) {
       for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
         if (entry.getValue() != -999) {
           chageList(type, othelloList.get(i + entry.getValue()));
         }
       }
-    } else {
-      othelloList.get(i).setType(type);
-      othelloList.get(i).setValue(value);
     }
 
     return true;
