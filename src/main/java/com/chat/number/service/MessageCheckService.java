@@ -2,7 +2,8 @@ package com.chat.number.service;
 
 import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
-import com.chat.number.model.GameMaterGameRule;
+import com.chat.number.model.GameMessage;
+import com.chat.number.model.GameRule;
 import com.chat.number.model.GameUser;
 import com.chat.number.type.MessageType;
 import com.chat.number.type.NumberOthelloType;
@@ -45,16 +46,25 @@ public class MessageCheckService {
       String numberOthello = number[0];
       String numberChoice = number[1];
 
-      GameMaterGameRule gameMaterRuleJson = new GameMaterGameRule();
       GameUser gameUser = gameRoom.getWriteUser().get(session.getId());
       GamePlayService gamePlayService = gameRoom.getGamePlayService();
-      gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
+      boolean check = gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
 
-      gameMaterRuleJson.setChatRoomId(gameRoom.getRoomId());
-      gameMaterRuleJson.setGame(gamePlayService.getOthelloList());
-      gameMaterRuleJson.setType(MessageType.GAME.name());
-      gameMaterRuleJson.setWriter(gameUser.getUsername());
-      chatMessage.setMessage(gameMaterRuleJson);
+      if (check) {
+        GameRule gameMaterRuleJson = new GameRule();
+        gameMaterRuleJson.setChatRoomId(gameRoom.getRoomId());
+        gameMaterRuleJson.setGame(gamePlayService.getOthelloList());
+        gameMaterRuleJson.setType(MessageType.GAME.name());
+        gameMaterRuleJson.setWriter(gameUser.getUsername());
+        chatMessage.setMessage(gameMaterRuleJson);
+      } else {
+        GameMessage message = new GameMessage();
+        message.setChatRoomId(gameRoom.getRoomId());
+        message.setMsg("그곳에 둘수는 없습니다.");
+        message.setType(MessageType.MESSAGE.name());
+        message.setWriter(gameUser.getUsername());
+        chatMessage.setMessage(message);
+      }
     }
     send(gameRoom, chatMessage, objectMapper);
   }

@@ -79,8 +79,10 @@ function onMessage(e) {
     } else if (type === 'GAME_RULE') {
 
     } else if (type === 'GAME_SCOPE') {
-
-
+        let game = data.game;
+        for (let i = 0; i < game.length; i++) {
+            document.getElementById(game[i].user).innerHTML = game[i].score;
+        }
     }
 
     // if (data.indexOf("GR^^")) {

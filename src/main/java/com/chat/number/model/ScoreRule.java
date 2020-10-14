@@ -9,11 +9,12 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class GameMaterGameRule {
+public class ScoreRule {
 
   String chatRoomId;
   String type;
   String writer;
-  List<NumberOthello> game;
+  List<UserScore> game;
+
 
 }

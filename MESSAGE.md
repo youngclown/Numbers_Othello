@@ -25,8 +25,18 @@ Toy project v.5
   }
 ```
 
+```json
+  {
+    chatRoomId : '현재 접속한 룸 ID',
+    type : 'MESSAGE', // CHAT, GAME, LEAVE, ENTER 등
+    writer : 'USER_NM', // 사용자
+    msg : '내용', // 내용 
+  }
+```
 
-1. GAME 전체 상황 체크 예제 (Master room), GAME TARGETING!
+
+
+3. GAME 전체 상황 체크 예제 (Master room), GAME TARGETING!
 
 ```json
   {
@@ -42,7 +52,7 @@ Toy project v.5
   }
 ```
 
-2. 점수를 체크 예제
+4. 점수를 체크 예제
 
 ```json
   {

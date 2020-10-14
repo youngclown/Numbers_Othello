@@ -54,15 +54,24 @@ public class GamePlayService {
     }
   }
 
-  public void gamePlay(String numberOthello, String numberChoice, String type) {
+  public boolean gamePlay(String numberOthello, String numberChoice, String type) {
+
+
+    int i = Integer.parseInt(numberOthello);
+    int value = Integer.parseInt(numberChoice);
+    String setType = othelloList.get(i).getType();
+
+    if (NumberOthelloType.BLANK.name().equals(setType)) return false;
+
+    int width = othelloList.get(i).getI();
+    int height = othelloList.get(i).getJ();  //Height
+
+
+
 
     // 배열 초기화 작업
     init();
 
-    int i = Integer.parseInt(numberOthello);
-    int value = Integer.parseInt(numberChoice);
-    int width = othelloList.get(i).getI();
-    int height = othelloList.get(i).getJ();  //Height
 
     int cnt = 0;
 
@@ -102,6 +111,8 @@ public class GamePlayService {
       othelloList.get(i).setType(type);
       othelloList.get(i).setValue(value);
     }
+
+    return true;
   }
 
   public int parseList(NumberOthello othello){

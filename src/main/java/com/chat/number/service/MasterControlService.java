@@ -1,7 +1,7 @@
 package com.chat.number.service;
 
 import com.chat.number.domain.GameRoom;
-import com.chat.number.model.GameMaterScoreRule;
+import com.chat.number.model.ScoreRule;
 import com.chat.number.model.GameUser;
 import com.chat.number.model.UserScore;
 import com.chat.number.type.MessageType;
@@ -73,12 +73,12 @@ public class MasterControlService extends Thread {
         // TODO GAME CLOSE
       } else {
         for (WebSocketSession session : sessions) {
-          GameMaterScoreRule gameMaterScoreRule = new GameMaterScoreRule();
-          gameMaterScoreRule.setChatRoomId(gameRoom.getRoomId());
-          gameMaterScoreRule.setType(MessageType.GAME_SCOPE.name());
-          gameMaterScoreRule.setGame(userScores);
+          ScoreRule scoreRule = new ScoreRule();
+          scoreRule.setChatRoomId(gameRoom.getRoomId());
+          scoreRule.setType(MessageType.GAME_SCOPE.name());
+          scoreRule.setGame(userScores);
 //          String gameScore = new Gson().toJson(gameMaterScoreRule);
-          String gameScore = objectMapper.writeValueAsString(gameMaterScoreRule);
+          String gameScore = objectMapper.writeValueAsString(scoreRule);
           if (gameScore != null) {
             TextMessage textMessage = new TextMessage(gameScore);
             session.sendMessage(textMessage);
