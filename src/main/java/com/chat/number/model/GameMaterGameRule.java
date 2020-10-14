@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class GameMaterRuleJson {
+public class GameMaterGameRule {
 
   String chatRoomId;
   String type;

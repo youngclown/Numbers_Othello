@@ -32,7 +32,7 @@ public class PostController {
 
 
   @PostMapping("/post/{id}")
-  public PostEntity updatePost(@PathVariable String id, @RequestBody PostEntity newPost) throws Exception {
+  public PostEntity updatePost(@PathVariable String id, @RequestBody PostEntity newPost) {
     Long postID = Long.parseLong(id);
     PostEntity post = postRepository.findById(postID).orElse(null);
     if (post != null) {
@@ -42,7 +42,7 @@ public class PostController {
       return post;
     } else {
       log.error("id : {}, newPost : {}", id, newPost);
-      throw new Exception();
+      return null;
     }
   }
 

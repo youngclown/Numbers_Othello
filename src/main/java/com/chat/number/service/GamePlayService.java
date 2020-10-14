@@ -125,4 +125,36 @@ public class GamePlayService {
       }
     }
   }
+
+
+
+  /*
+    PLAYER_ONE("PO"),       // 플레이1
+    PLAYER_TWO("PT"),       // 플레이2
+    BLANK("B"),            // 빈화면
+    PLAYER_ONE_BLOCK("POB"), // 플레이1의 배경
+    PLAYER_TWO_BLOCK("PTB");  // 플레이2의 배경
+   */
+  public int getScore(String type) {
+
+    int score = 0;
+    if (NumberOthelloType.PLAYER_ONE.getValue().equals(type)) {
+      for (NumberOthello numberOthello: othelloList) {
+        if (numberOthello.getType().equals(NumberOthelloType.PLAYER_ONE.getValue()) ||
+            numberOthello.getType().equals(NumberOthelloType.PLAYER_ONE_BLOCK.getValue()))
+          score += numberOthello.getValue();
+      }
+    } else if (NumberOthelloType.PLAYER_TWO.getValue().equals(type)) {
+      for (NumberOthello numberOthello: othelloList) {
+        if (numberOthello.getType().equals(NumberOthelloType.PLAYER_TWO.getValue()) ||
+                numberOthello.getType().equals(NumberOthelloType.PLAYER_TWO_BLOCK.getValue()))
+          score += numberOthello.getValue();
+      }
+    } else {
+      log.error("not found user {}", type);
+    }
+
+    return score;
+  }
+
 }

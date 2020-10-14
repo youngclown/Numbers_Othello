@@ -2,7 +2,7 @@ package com.chat.number.service;
 
 import com.chat.number.domain.ChatMessage;
 import com.chat.number.domain.GameRoom;
-import com.chat.number.model.GameMaterRuleJson;
+import com.chat.number.model.GameMaterGameRule;
 import com.chat.number.model.GameUser;
 import com.chat.number.type.MessageType;
 import com.chat.number.type.NumberOthelloType;
@@ -36,8 +36,7 @@ public class MessageCheckService {
                               NumberOthelloType.PLAYER_ONE.getValue() :
                               NumberOthelloType.PLAYER_TWO.getValue()));
       chatMessage.setMessage(chatMessage.getName() + " game join");
-    }
-    else if(chatMessage.getType() == MessageType.CHAT){
+    } else if(chatMessage.getType() == MessageType.CHAT){
       chatMessage.setMessage(chatMessage.getName() + " : " + chatMessage.getMessage());
     } else if (chatMessage.getType() == MessageType.GAME) {
 
@@ -46,7 +45,7 @@ public class MessageCheckService {
       String numberOthello = number[0];
       String numberChoice = number[1];
 
-      GameMaterRuleJson gameMaterRuleJson = new GameMaterRuleJson();
+      GameMaterGameRule gameMaterRuleJson = new GameMaterGameRule();
       GameUser gameUser = gameRoom.getWriteUser().get(session.getId());
       GamePlayService gamePlayService = gameRoom.getGamePlayService();
       gamePlayService.gamePlay(numberOthello, numberChoice, gameUser.getType());
