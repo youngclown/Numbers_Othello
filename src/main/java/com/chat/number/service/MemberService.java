@@ -5,6 +5,7 @@ import com.chat.number.dto.MemberDto;
 import com.chat.number.repository.MemberRepository;
 import com.chat.number.type.RoleType;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Log4j2
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
   private final MemberRepository memberRepository;
@@ -35,8 +36,12 @@ public class MemberService implements UserDetailsService {
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Optional<MemberEntity> userEntityWrapper = memberRepository.findByEmail(username);
-    MemberEntity userEntity = userEntityWrapper.get();
+    MemberEntity userEntity = memberRepository.findByEmail(username).orElse(null);
+
+    if (userEntity == null) {
+      log.info("userEntity is null {}", username);
+      return null;
+    }
 
     List<GrantedAuthority> authorities = new ArrayList<>();
 
