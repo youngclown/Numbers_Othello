@@ -78,6 +78,9 @@ function onMessage(e) {
         }
     } else if (type === 'GAME_RULE') {
 
+    } else if (type === 'CHAT') {
+        const chatroom = document.getElementById("chatroom");
+        chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
     } else if (type === 'GAME_SCOPE') {
         let game = data.game;
         for (let i = 0; i < game.length; i++) {

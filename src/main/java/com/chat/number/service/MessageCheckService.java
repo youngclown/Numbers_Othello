@@ -36,9 +36,14 @@ public class MessageCheckService {
                       gameRoom.getRoomUserCount() == 0 ?
                               NumberOthelloType.PLAYER_ONE.getValue() :
                               NumberOthelloType.PLAYER_TWO.getValue()));
+
       chatMessage.setMessage(chatMessage.getName() + " game join");
     } else if(chatMessage.getType() == MessageType.CHAT){
-      chatMessage.setMessage(chatMessage.getName() + " : " + chatMessage.getMessage());
+      GameMessage gameMessage = new GameMessage();
+      gameMessage.setChatRoomId(gameRoom.getRoomId());
+      gameMessage.setMsg(chatMessage.getMessage().toString());
+      gameMessage.setType(MessageType.CHAT.name());
+      gameMessage.setWriter(chatMessage.getName());
     } else if (chatMessage.getType() == MessageType.GAME) {
 
       String gameRule = (String) chatMessage.getMessage();
