@@ -3,7 +3,12 @@ Toy project v.5
 
 #MariaDB 설치 및 계정 생성
 
-1. Maria repository 설정  
+1. gradle dependencies 추가
+```
+    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.2.0'
+    runtimeOnly 'mysql:mysql-connector-java'
+```
+2. Maria repository 설정  
  
 ```shell script
 [root@zabbix1 ~]# vi /etc/yum.repos.d/MariaDB.repo
@@ -14,21 +19,21 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 ```
 
-2. repository 설정된 네이밍으로 yum install  
+3. repository 설정된 네이밍으로 yum install  
 
 ```shell script
 [root@localhost ~]# yum install MariaDB
 [root@localhost ~]# rpm -qa | grep MariaDB
 ```
 
-3. MaridDB 실행 및 root 비밀번호 설정    
+4. MaridDB 실행 및 root 비밀번호 설정    
 
 ```shell script
 [root@localhost ~]# sudo service mysql start
 [root@localhost ~]# /usr/bin/mysqladmin -u root password '123456'
 ```
 
-4. mysql 로그인하여 database db 설정  
+5. mysql 로그인하여 database db 설정  
 ```shell script  
 [root@localhost ~]# mysql -u root -p  
 Enter password: 123456  
@@ -39,26 +44,53 @@ MariaDB [(none)]> flush privileges;
 MariaDB [(none)]> quit  
 ```  
 
-5. mysql 이 정상적으로 설치되어 데몬 프로세스에 올라와있는지 확인.    
+6. mysql 이 정상적으로 설치되어 데몬 프로세스에 올라와있는지 확인.    
 ```shell script  
 [root@localhost ~]# netstat -lnp | grep mysql
 tcp        0      0 :::3306                     :::*                        LISTEN      1232/mysqld
 unix  2      [ ACC ]     STREAM     LISTENING     11174  1232/mysqld         /var/lib/mysql/mysql.sock
 ```  
 
-6. 3306 port를 외부 포트로 허용
+7. 3306 port를 외부 포트로 허용
 
 ```shell script  
 [root@localhost ~]# iptables -I INPUT -p tcp --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT
 [root@localhost ~]# iptables -I OUTPUT -p tcp --sport 3306 -m state --state ESTABLISHED -j ACCEPT
 ```
 
-7. 방화벽 규칙 저장 (6번 항목 3306) 
+8. 방화벽 규칙 저장 (6번 항목 3306) 
 
 ```shell script
 [root@localhost ~]# service iptables save
 iptables: 방화벽 규칙을 /etc/sysconfig/iptables에 저장 중: [  OK  ]
 ```
+
+1 ~ 8. 다른 버전.
+
+```
+test_db;AUTO_SERVER=TRUE;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE  #접속 URL
+```
+
+gradle dependencies 추가
+
+```
+    runtimeOnly 'com.h2database:h2'
+```
+우선 테스트를 위해, h2데이터베이스 사용.
+```
+
+  h2:
+    console:
+      enabled: true  # H2 웹 콘솔을 사용하겠다는 의미
+      path: /test_db  # 콘솔의 경로
+  datasource:
+    driver-class-name: org.h2.Driver  #h2 드라이버 설정
+    url: jdbc:h2:file:~/github/test_db;AUTO_SERVER=TRUE;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE  #접속 URL
+    username: test  # 사용자 이름 (로그인 시 사용)
+    password: 1234  # 사용자 암호 (로그인 시 사용)
+
+```
+
 
 8. 방화벽 재시작   
 ```shell script

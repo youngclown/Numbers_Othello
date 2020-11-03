@@ -15,6 +15,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 //import com.fasterxml.jackson.core.JsonProcessingException;
 
+/**
+ * 메시지를 체크하여 해당 메시지에 해당하는 로직을 수행
+ */
 @Service
 @Slf4j
 public class MessageCheckService {
