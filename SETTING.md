@@ -101,7 +101,7 @@ iptables: 모듈을 언로드하는 중:                            [  OK  ]
 iptables: 방화벽 규칙 적용 중:                             [  OK  ]
 ```
 
-# Redis 설치 및 계정 생성
+# Redis 설치 및 계정 생성 (우선 현재 기능에선 삭제해둠)
 
 
 1. redis 설치 (epel, remi 저장소는 기본적으로  활성화되지 않으므로 --enablerepo 옵션을 줌.

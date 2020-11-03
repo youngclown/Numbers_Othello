@@ -36,9 +36,9 @@ public class MemberService implements UserDetailsService {
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    MemberEntity userEntity = memberRepository.findByEmail(username).orElse(null);
+    MemberEntity memberEntity = memberRepository.findByEmail(username).orElse(null);
 
-    if (userEntity == null) {
+    if (memberEntity == null) {
       log.info("userEntity is null {}", username);
       return null;
     }
@@ -46,7 +46,7 @@ public class MemberService implements UserDetailsService {
     List<GrantedAuthority> authorities = new ArrayList<>();
     authorities.add(new SimpleGrantedAuthority(RoleType.MEMBER.getValue()));
 
-    return new User(userEntity.getEmail(), userEntity.getPassword(), authorities);
+    return new User(memberEntity.getEmail(), memberEntity.getPassword(), authorities);
   }
 
 

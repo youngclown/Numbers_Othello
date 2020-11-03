@@ -22,12 +22,6 @@ import org.springframework.web.socket.WebSocketSession;
 @Slf4j
 public class MessageCheckService {
 
-  final RedisService redisService;
-
-  public MessageCheckService(RedisService redisService) {
-    this.redisService = redisService;
-  }
-
   public void handleMessage(GameRoom gameRoom, WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws Exception {
     if(chatMessage.getType() == MessageType.ENTER){
       gameRoom.getSessions().add(session);
