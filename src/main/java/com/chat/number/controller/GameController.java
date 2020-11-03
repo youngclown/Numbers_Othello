@@ -26,7 +26,6 @@ public class GameController {
     @GetMapping("/rooms/{id}")
     public String room(@PathVariable String id, Model model){
         GameRoom room = gameRoomRepository.findRoomById(id);
-        room.setRoomUserCount(room.getRoomUserCount()+1);
         model.addAttribute("room",room);
         return "room";
     }
@@ -40,8 +39,8 @@ public class GameController {
 
     @PostMapping("/room/new")
     public String makeRoom(ChatRoomForm form){
-        gameRoomRepository.createChatRoom(form.getName());
-        return "redirect:/start";
+        GameRoom gameRoom = gameRoomRepository.createChatRoom(form.getName());
+        return "redirect:/rooms/"+gameRoom.getRoomId();
     }
 
 }

@@ -36,7 +36,7 @@ public class MessageCheckService {
               session.getId(),
               new GameUser(
                       chatMessage.getName(),
-                      gameRoom.getRoomUserCount() == 0 ?
+                      gameRoom.getRoomUserCount() == 1 ?
                               NumberOthelloType.PLAYER_ONE.getValue() :
                               NumberOthelloType.PLAYER_TWO.getValue()));
 
