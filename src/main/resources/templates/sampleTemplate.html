@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("console_N1_시작!!");
+            var box = [0, 1, 2, 3, 4, 5, 7, 8, 9];
+
+            var totalBox = box.length;
+            var num = 0;
+
+            $.each(box, function (i) {
+                console.log("console_N2_boxNum = " + i);
+                if (num < totalBox) {
+                    $(".wrap").append("<div id='nemo" + i + "' class='nemoC'><div class='in'>네모" + i + "</div></div>");
+                }
+            });
+
+        });
+    </script>
+    <title>grid_test</title>
+    <style>
+        /*
+        .wrap{width:100%; height:0%; max-width:900px; overflow:hidden; padding-bottom:100%; position:absolute; top:50%; left:50%; transform: translate(-50%, -50%); border:5px solid #ededed; display:flex;}
+        .nemoC{position: relative; width:33.33%; height:0; padding-bottom:33.33%; background:#000; border:1px solid red; flex:auto;}
+        */
+        .wrap {
+            width: 100%;
+            height: 0%;
+            max-width: 900px;
+            overflow: hidden;
+            padding-bottom: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 5px solid #ededed;
+        }
+
+        .nemoC {
+            position: relative;
+            width: 33.33%;
+            height: 0;
+            padding-bottom: 33%;
+            background: #000;
+            float: left;
+        }
+
+        .in {
+            margin: 5% auto;
+            width: 90%;
+            height: 0;
+            padding-bottom: 90%;
+            background: #fff;
+        }
+    </style>
+
+
+</head>
+
+<body translate="no">
+
+
+<div class="wrap">
+</div>
+
+</body>
+</html>
