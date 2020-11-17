@@ -35,6 +35,9 @@ public class MessageCheckService {
                               NumberOthelloType.PLAYER_TWO.getValue()));
 
       chatMessage.setMessage(chatMessage.getName() + " game join");
+    } else if(chatMessage.getType() == MessageType.READY){
+      // 레디가 두개가 되어야지 게임이 시작됨!!!
+
     } else if(chatMessage.getType() == MessageType.CHAT){
       GameMessage gameMessage = new GameMessage();
       gameMessage.setChatRoomId(gameRoom.getRoomId());

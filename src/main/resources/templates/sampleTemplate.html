@@ -7,44 +7,44 @@
     <script>
         $(document).ready(function () {
             console.log("console_N1_시작!!");
-            var box = [0, 1, 2, 3, 4, 5, 7, 8, 9];
-
-            var totalBox = box.length;
-            var num = 0;
-
-            $.each(box, function (i) {
+            const num = 0;
+            for (let i = 0; i < 49; i++) {
                 console.log("console_N2_boxNum = " + i);
-                if (num < totalBox) {
+                if (num < 30) {
                     $(".wrap").append("<div id='nemo" + i + "' class='nemoC'><div class='in'>네모" + i + "</div></div>");
                 }
-            });
-
+            }
         });
     </script>
     <title>grid_test</title>
     <style>
-        /*
-        .wrap{width:100%; height:0%; max-width:900px; overflow:hidden; padding-bottom:100%; position:absolute; top:50%; left:50%; transform: translate(-50%, -50%); border:5px solid #ededed; display:flex;}
-        .nemoC{position: relative; width:33.33%; height:0; padding-bottom:33.33%; background:#000; border:1px solid red; flex:auto;}
-        */
+        .top {
+            width: 100%;
+            height: 15%;
+            overflow: hidden;
+            max-width: 700px;
+            border: 5px solid red;
+        }
+
         .wrap {
             width: 100%;
-            height: 0%;
-            max-width: 900px;
+            height: 0;
+            /*min-width: 700px;*/
+            max-width: 700px;
             overflow: hidden;
             padding-bottom: 100%;
-            position: absolute;
+            /*position: absolute;*/
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            /*transform: translate(-50%, -50%);*/
             border: 5px solid #ededed;
         }
 
         .nemoC {
             position: relative;
-            width: 33.33%;
+            width: 14.28%;
             height: 0;
-            padding-bottom: 33%;
+            padding-bottom: 14.28%;
             background: #000;
             float: left;
         }
@@ -56,16 +56,21 @@
             padding-bottom: 90%;
             background: #fff;
         }
+        .bottom {
+            width: 100%;
+            height: 15%;
+            overflow: hidden;
+            max-width: 700px;
+            border: 5px solid blue;
+        }
     </style>
-
-
 </head>
 
 <body translate="no">
 
-
-<div class="wrap">
-</div>
+<div class="top"></div>
+<div class="wrap"></div>
+<div class="bottom"></div>
 
 </body>
 </html>

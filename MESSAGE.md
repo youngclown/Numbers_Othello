@@ -20,7 +20,7 @@ Toy project v.5
 ```json
   {
     chatRoomId : '현재 접속한 룸 ID',
-    type : 'GAME', // CHAT, GAME, LEAVE, ENTER 등
+    type : 'GAME', // CHAT, GAME, LEAVE, ENTER, READY 등
     writer : 'USER_NM', // 사용자 
   }
 ```
@@ -28,7 +28,7 @@ Toy project v.5
 ```json
   {
     chatRoomId : '현재 접속한 룸 ID',
-    type : 'MESSAGE', // CHAT, GAME, LEAVE, ENTER 등
+    type : 'MESSAGE', // CHAT, GAME, LEAVE, ENTER, READY 등
     writer : 'USER_NM', // 사용자
     msg : '내용', // 내용 
   }
@@ -57,7 +57,7 @@ Toy project v.5
 ```json
   {
     chatRoomId : '현재 접속한 룸 ID',
-    type : 'GAME_SCOPE', // CHAT, GAME, LEAVE, ENTER 등
+    type : 'GAME_SCOPE', // CHAT, GAME, LEAVE, ENTER, READY 등
     writer : '사용자코드값', // 사용자 
     game : [{"user":"PO","score":"0"},
             {"user":"PT","score":"0"}]} // 플레이어 1, 플레이어 2에 대한 값 처리

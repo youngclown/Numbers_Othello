@@ -7,8 +7,12 @@ document.getElementById("send").addEventListener("click", function () {
     send();
 })
 
-var check = false;
-var numberChoice = 0;
+document.getElementById("ready").addEventListener("click", function () {
+    ready();
+})
+
+let check = false;
+let numberChoice = 0;
 
 function sendNumber(number) {
     if (check === true) {
@@ -30,7 +34,6 @@ function choiceNumber(number) {
     numberChoice = number;
 }
 
-
 function connect() {
     webSocket = new WebSocket("ws://localhost:8080/chat");
     webSocket.onopen = onOpen;
@@ -49,6 +52,13 @@ function send() {
     document.getElementById("message").value = "";
 }
 
+/* 준비완료(WATTING), 대기(READY) */
+function ready() {
+    const msg = document.getElementById("ready").value;
+    webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'READY', writer: userNm, message: msg}));
+    // ------- 대기중....
+}
+
 function onOpen() {
     webSocket.send(JSON.stringify({chatRoomId: roomId, type: 'ENTER', writer: userNm}));
 }
@@ -58,9 +68,6 @@ function onMessage(e) {
     const data = JSON.parse(e.data);
     console.log(data);
     let type = data.type;
-
-    // const data = JSON.stringify(e.data);
-
     if (type === 'GAME') {
         let game = data.game;
         for (let i = 0; i < game.length; i++) {
@@ -87,15 +94,6 @@ function onMessage(e) {
             document.getElementById(game[i].user).innerHTML = game[i].score;
         }
     }
-
-    // if (data.indexOf("GR^^")) {
-    //     document.getElementById("roomUserCount").value = "";
-    // } else {
-    // const chatroom = document.getElementById("chatroom");
-    // chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
-    // }
-
-    // document.getElementById('send'+i).innerHTML;
 }
 
 function onClose() {
