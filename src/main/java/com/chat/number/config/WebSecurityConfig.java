@@ -17,45 +17,44 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-  private final MemberService memberService;
+    private final MemberService memberService;
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Override
-  public void configure(WebSecurity web) throws Exception
-  {
-    // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
-    web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**");
-  }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**");
+    }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.authorizeRequests()
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .antMatchers("/user/myinfo").hasRole("MEMBER")
-            .antMatchers("/**").permitAll()
-            .and()
-            .formLogin()
-            .loginPage("/user/login")
-            .defaultSuccessUrl("/user/login/result")
-            .permitAll()
-            .and() // 로그아웃 설정
-            .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-            .logoutSuccessUrl("/user/logout/result")
-            .invalidateHttpSession(true)
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/myinfo").hasRole("MEMBER")
+                .antMatchers("/**").permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/user/login/result")
+                .permitAll()
+                .and() // 로그아웃 설정
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                .logoutSuccessUrl("/user/logout/result")
+                .invalidateHttpSession(true)
 //            .and()
 //            .csrf().ignoringAntMatchers("/room/new")
-            .and()
-            .exceptionHandling().accessDeniedPage("/user/denied")
-            ;
-  }
+                .and()
+                .exceptionHandling().accessDeniedPage("/user/denied")
+        ;
+    }
 
-  @Override
-  public void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
-  }
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
+    }
 }

@@ -8,11 +8,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserScore {
-  String user;
-  int score;
+    String user;
+    int score;
 
-  public UserScore(String user, int score) {
-    this.user = user;
-    this.score = score;
-  }
+    public UserScore(String user, int score) {
+        this.user = user;
+        this.score = score;
+    }
 }

@@ -4,7 +4,8 @@ import com.chat.number.type.MessageType;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class ChatMessage {
     private String chatRoomId;
     private String name;

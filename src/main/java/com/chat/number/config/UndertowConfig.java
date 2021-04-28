@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class UndertowConfig {
-  @Bean
-  public UndertowServletWebServerFactory undertowServletWebServerFactory() {
-    UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();
-    factory.addBuilderCustomizers(builder -> builder.setServerOption(UndertowOptions.RECORD_REQUEST_START_TIME, true));
-    return factory;
-  }
+    @Bean
+    public UndertowServletWebServerFactory undertowServletWebServerFactory() {
+        UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();
+        factory.addBuilderCustomizers(builder -> builder.setServerOption(UndertowOptions.RECORD_REQUEST_START_TIME, true));
+        return factory;
+    }
 }

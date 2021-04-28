@@ -8,9 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class NumberOthello {
-	String type = "";
-	int pod = 0;
-	int i = 0;
-	int j = 0;
-	int value = 0;
+    String type = "";
+    int pod = 0;
+    int i = 0;
+    int j = 0;
+    int value = 0;
 }

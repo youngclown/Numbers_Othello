@@ -22,38 +22,38 @@ public class GameController {
     private final GameRoomRepository gameRoomRepository;
 
     @GetMapping("/start")
-    public String rooms(Model model){
-        model.addAttribute("rooms",gameRoomRepository.findAllRoom());
+    public String rooms(Model model) {
+        model.addAttribute("rooms", gameRoomRepository.findAllRoom());
         return "rooms";
     }
 
     @GetMapping("/rooms/{id}")
-    public String room(@PathVariable String id, Model model){
+    public String room(@PathVariable String id, Model model) {
         GameRoom room = gameRoomRepository.findRoomById(id);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object myUser = (auth != null) ? auth.getPrincipal() :  null;
+        Object myUser = (auth != null) ? auth.getPrincipal() : null;
 
         if (myUser instanceof User) {
             User user = (User) myUser;
             GameUser gameUser = room.getWriteUser().get(user.getUsername());
-            model.addAttribute("gameUser",gameUser);
+            model.addAttribute("gameUser", gameUser);
         }
-        model.addAttribute("room",room);
+        model.addAttribute("room", room);
         return "room";
     }
 
     @GetMapping("/new")
-    public String make(Model model){
+    public String make(Model model) {
         ChatRoomForm form = new ChatRoomForm();
-        model.addAttribute("form",form);
+        model.addAttribute("form", form);
         return "newRoom";
     }
 
     @PostMapping("/room/new")
-    public String makeRoom(ChatRoomForm form){
+    public String makeRoom(ChatRoomForm form) {
         GameRoom gameRoom = gameRoomRepository.createChatRoom(form.getName());
-        return "redirect:/rooms/"+gameRoom.getRoomId();
+        return "redirect:/rooms/" + gameRoom.getRoomId();
     }
 
 }

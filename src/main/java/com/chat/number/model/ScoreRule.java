@@ -11,10 +11,10 @@ import java.util.List;
 @ToString
 public class ScoreRule {
 
-  String chatRoomId;
-  String type;
-  String writer;
-  List<UserScore> game;
+    String chatRoomId;
+    String type;
+    String writer;
+    List<UserScore> game;
 
 
 }

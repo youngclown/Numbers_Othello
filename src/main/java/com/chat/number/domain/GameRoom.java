@@ -10,7 +10,8 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.*;
 
 @Slf4j
-@Getter @Setter
+@Getter
+@Setter
 public class GameRoom {
     private String roomId;
     private String name;

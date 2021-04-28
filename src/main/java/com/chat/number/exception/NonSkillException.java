@@ -5,9 +5,9 @@ package com.chat.number.exception;
  */
 public class NonSkillException extends BaseException {
 
-	private static final long serialVersionUID = 1668048243860787851L;
+    private static final long serialVersionUID = 1668048243860787851L;
 
-	public NonSkillException() {
+    public NonSkillException() {
     }
 
     public NonSkillException(String message) {

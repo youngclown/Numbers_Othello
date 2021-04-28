@@ -23,34 +23,31 @@ import java.util.List;
 @Log4j2
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  @Transactional
-  public void joinUser(MemberDto memberDto) {
-    // 비밀번호 암호화
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-    memberRepository.save(memberDto.toEntity());
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    MemberEntity memberEntity = memberRepository.findByEmail(username).orElse(null);
-
-    if (memberEntity == null) {
-      log.info("userEntity is null {}", username);
-      return null;
+    @Transactional
+    public void joinUser(MemberDto memberDto) {
+        // 비밀번호 암호화
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+        memberRepository.save(memberDto.toEntity());
     }
 
-    List<GrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority(RoleType.MEMBER.getValue()));
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        MemberEntity memberEntity = memberRepository.findByEmail(username).orElse(null);
 
-    return new User(memberEntity.getEmail(), memberEntity.getPassword(), authorities);
-  }
+        if (memberEntity == null) {
+            log.info("userEntity is null {}", username);
+            return null;
+        }
 
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(RoleType.MEMBER.getValue()));
 
-
+        return new User(memberEntity.getEmail(), memberEntity.getPassword(), authorities);
+    }
 
 
 }

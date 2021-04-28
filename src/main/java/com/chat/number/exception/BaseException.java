@@ -2,9 +2,9 @@ package com.chat.number.exception;
 
 public class BaseException extends Exception {
 
-	private static final long serialVersionUID = -1580384145024683651L;
+    private static final long serialVersionUID = -1580384145024683651L;
 
-	public BaseException() {
+    public BaseException() {
         super();
     }
 

@@ -11,9 +11,9 @@ import java.util.List;
 @ToString
 public class GameRule {
 
-  String chatRoomId;
-  String type;
-  String writer;
-  List<NumberOthello> game;
+    String chatRoomId;
+    String type;
+    String writer;
+    List<NumberOthello> game;
 
 }

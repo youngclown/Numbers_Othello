@@ -10,19 +10,19 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class MemberDto {
-  private Long id;
-  private String email;
-  private String name;
-  private String password;
-  private LocalDateTime createdDate;
-  private LocalDateTime modifiedDate;
+    private Long id;
+    private String email;
+    private String name;
+    private String password;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
-  public MemberEntity toEntity(){
-    return MemberEntity.builder()
-            .id(id)
-            .name(name)
-            .email(email)
-            .password(password)
-            .build();
-  }
+    public MemberEntity toEntity() {
+        return MemberEntity.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
+    }
 }
