@@ -1,8 +1,8 @@
 package com.chat.number.service;
 
 import com.chat.number.domain.GameRoom;
-import com.chat.number.model.ScoreRule;
 import com.chat.number.model.GameUser;
+import com.chat.number.model.ScoreRule;
 import com.chat.number.model.UserScore;
 import com.chat.number.type.MessageType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.*;
 
-//
+// 모든 서비스가 여기서 중복되서 동작합니다.
 @Slf4j
 public class MasterControlService extends Thread {
     GameRoom gameRoom;  // 세션 유지
@@ -48,8 +48,11 @@ public class MasterControlService extends Thread {
                     GamePlayService gamePlayService = this.gameRoom.getGamePlayService();
                     int score = gamePlayService.getScore(gameUser.getType());
                     gameUser.setScore(score);
+
                     userScores.add(new UserScore(gameUser.getType(), score));
                     session.sendMessage(new TextMessage(String.valueOf(score)));
+
+
                 } catch (Exception e) {
                     removeCheck = true;
                     writerList.add(writeUser.get(session.getId()).getUsername());
@@ -76,7 +79,6 @@ public class MasterControlService extends Thread {
                     scoreRule.setChatRoomId(gameRoom.getRoomId());
                     scoreRule.setType(MessageType.GAME_SCOPE.name());
                     scoreRule.setGame(userScores);
-//          String gameScore = new Gson().toJson(gameMaterScoreRule);
                     String gameScore = objectMapper.writeValueAsString(scoreRule);
                     if (gameScore != null) {
                         TextMessage textMessage = new TextMessage(gameScore);

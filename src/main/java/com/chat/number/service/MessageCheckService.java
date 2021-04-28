@@ -30,13 +30,23 @@ public class MessageCheckService {
                     session.getId(),
                     new GameUser(
                             chatMessage.getName(),
-                            gameRoom.getRoomUserCount() == 1 ?
+                            gameRoom.getRoomUserCount() == 1 ?  // 해당 방에 게임룸 유저 수로 count함.
                                     NumberOthelloType.PLAYER_ONE.getValue() :
                                     NumberOthelloType.PLAYER_TWO.getValue()));
 
             chatMessage.setMessage(chatMessage.getName() + " game join");
+
+
         } else if (chatMessage.getType() == MessageType.READY) {
             // 레디가 두개가 되어야지 게임이 시작됨!!!
+
+
+
+            GameUser gameUser = gameRoom.getWriteUser().get(session.getId());
+            gameUser.setReady(true);        // ready 가 on 됨.
+
+
+            chatMessage.setMessage(chatMessage.getName() + " 가 준비상태가 되었습니다.");
 
         } else if (chatMessage.getType() == MessageType.CHAT) {
             GameMessage gameMessage = new GameMessage();

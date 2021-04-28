@@ -27,7 +27,6 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public void joinUser(MemberDto memberDto) {
-        // 비밀번호 암호화
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         memberRepository.save(memberDto.toEntity());
