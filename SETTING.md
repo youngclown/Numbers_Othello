@@ -1,7 +1,7 @@
 Toy project v.5
 ---
 
-#MariaDB 설치 및 계정 생성
+# MariaDB 설치 및 계정 생성
 
 1. gradle dependencies 추가
 ```

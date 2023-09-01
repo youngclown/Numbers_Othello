@@ -1,4 +1,3 @@
-
 let webSocket;
 let roomId = document.getElementById('roomId').value;
 let userNm = document.getElementById('userName').innerHTML;
@@ -71,16 +70,16 @@ function onMessage(e) {
     if (type === 'GAME') {
         let game = data.game;
         for (let i = 0; i < game.length; i++) {
-            if(game[i].type === 'PO') {
-                document.getElementById("send"+i).innerHTML = "PO";
-            } else if(game[i].type === 'PT') {
-                document.getElementById("send"+i).innerHTML = "PT";
-            } else if(game[i].type === 'B') {
-                document.getElementById("send"+i).innerHTML = "B";
-            } else if(game[i].type === 'POB') {
-                document.getElementById("send"+i).innerHTML = "POB";
-            } else if(game[i].type === 'PTB') {
-                document.getElementById("send"+i).innerHTML = "PTB";
+            if (game[i].type === 'PO') {
+                document.getElementById("send" + i).innerHTML = '<div class="player-one">'+game[i].value+'</div>';
+            } else if (game[i].type === 'PT') {
+                document.getElementById("send" + i).innerHTML = '<div class="player-two">'+game[i].value+'</div>';
+            } else if (game[i].type === 'B') {
+                document.getElementById("send" + i).innerHTML = '<div class="blank"></div>';
+            } else if (game[i].type === 'POB') {
+                document.getElementById("send" + i).innerHTML = '<div class="player-one-block"></div>';
+            } else if (game[i].type === 'PTB') {
+                document.getElementById("send" + i).innerHTML = '<div class="player-two-block"></div>';
             }
         }
     } else if (type === 'GAME_RULE') {
