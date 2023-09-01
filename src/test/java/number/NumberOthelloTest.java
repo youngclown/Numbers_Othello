@@ -1,4 +1,4 @@
-package com.chat.number;
+package number;
 
 import com.chat.number.model.NumberOthello;
 import com.chat.number.type.NumberOthelloType;
