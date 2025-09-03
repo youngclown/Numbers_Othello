@@ -21,16 +21,21 @@ function sendNumber(number) {
             writer: userNm,
             message: number + "##" + numberChoice
         }));
+        const status = document.getElementById("statusText");
+        if (status) status.innerText = "서버 응답 대기 중...";
     } else {
         const chatroom = document.getElementById("chatroom");
         chatroom.innerHTML = chatroom.innerHTML + "<br>" + "숫자 버튼을 선택해주세요";
-
     }
 }
 
 function choiceNumber(number) {
     check = true;
     numberChoice = number;
+    const sel = document.getElementById("selectedNumber");
+    if (sel) sel.innerText = String(number);
+    const status = document.getElementById("statusText");
+    if (status) status.innerText = "배치할 위치를 클릭하세요";
 }
 
 function connect() {
@@ -82,15 +87,34 @@ function onMessage(e) {
                 document.getElementById("send" + i).innerHTML = '<div class="player-two-block"></div>';
             }
         }
-    } else if (type === 'GAME_RULE') {
-
+        const status = document.getElementById('statusText');
+        if (status) status.innerText = '배치가 반영되었습니다.';
+    } else if (type === 'MESSAGE') {
+        const chatroom = document.getElementById('chatroom');
+        if (data.msg) {
+            chatroom.innerHTML = chatroom.innerHTML + '<br>' + (data.writer ? (data.writer + ': ') : '') + data.msg;
+        } else if (typeof data === 'string') {
+            chatroom.innerHTML = chatroom.innerHTML + '<br>' + data;
+        }
+        const status = document.getElementById('statusText');
+        if (status && data.msg) status.innerText = data.msg;
     } else if (type === 'CHAT') {
-        const chatroom = document.getElementById("chatroom");
-        chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
+        const chatroom = document.getElementById('chatroom');
+        if (data.msg) {
+            chatroom.innerHTML = chatroom.innerHTML + '<br>' + (data.writer ? (data.writer + ': ') : '') + data.msg;
+        } else {
+            chatroom.innerHTML = chatroom.innerHTML + '<br>' + JSON.stringify(data);
+        }
     } else if (type === 'GAME_SCOPE') {
         let game = data.game;
         for (let i = 0; i < game.length; i++) {
             document.getElementById(game[i].user).innerHTML = game[i].score;
+        }
+    } else {
+        // Fallback: server sometimes sends plain strings (e.g., ENTER/READY messages)
+        if (typeof data === 'string') {
+            const chatroom = document.getElementById('chatroom');
+            chatroom.innerHTML = chatroom.innerHTML + '<br>' + data;
         }
     }
 }

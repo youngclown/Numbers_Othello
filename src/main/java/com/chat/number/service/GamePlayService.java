@@ -18,6 +18,8 @@ public class GamePlayService {
     public Map<CheckerBoardRangeType, Integer> CHECKERBOARD = new HashMap<>();
     public ArrayList<NumberOthello> othelloList = new ArrayList<>();
     final int CHECKERBOARD_SIZE = 7; // 가로 세로 체커보드
+    // 마지막 낸 숫자 추적 (플레이어별)
+    private final Map<String, Integer> lastPlayedValue = new HashMap<>();
 
     public void init() {
         CHECKERBOARD.put(CheckerBoardRangeType.LEFT_UP, -(CHECKERBOARD_SIZE + 1));
@@ -55,22 +57,39 @@ public class GamePlayService {
     }
 
     public boolean gamePlay(String numberOthello, String numberChoice, String type) {
-
-
         int i = Integer.parseInt(numberOthello);
         int value = Integer.parseInt(numberChoice);
         String setType = othelloList.get(i).getType();
 
-        if (NumberOthelloType.BLANK.name().equals(setType)) return false;
+        // Rule 1: 1은 두번 연속으로 낼 수 없습니다. (단, 1만 남을 경우는 예외 - 현재는 단순 연속 제한만 적용)
+        if (value == 1 && lastPlayedValue.getOrDefault(type, 0) == 1) {
+            return false;
+        }
 
-        int width = othelloList.get(i).getI();
-        int height = othelloList.get(i).getJ();  //Height
+        // Only allow placing on BLANK cells
+        if (!NumberOthelloType.BLANK.getValue().equals(setType)) return false;
 
-        // 배열 초기화 작업
+        // place the number first
+        othelloList.get(i).setType(type);
+        othelloList.get(i).setValue(value);
+        lastPlayedValue.put(type, value);
+
+        // apply effects around the newly placed number
+        applyLocalEffects(i, type, value);
+
+        // After current player's effects, apply global effects: first current player, then opponent
+        applyGlobalEffects(type);
+        applyGlobalEffects(opponentOf(type));
+
+        return true;
+    }
+
+    private void applyLocalEffects(int index, String type, int value) {
         init();
+        int width = othelloList.get(index).getI();
+        int height = othelloList.get(index).getJ();
 
-        int cnt = 0;
-
+        // invalidate out-of-range directions for border cells
         if (width == 0) {
             CHECKERBOARD.put(CheckerBoardRangeType.LEFT_UP, -999);
             CHECKERBOARD.put(CheckerBoardRangeType.CNETER_UP, -999);
@@ -91,25 +110,46 @@ public class GamePlayService {
             CHECKERBOARD.put(CheckerBoardRangeType.RIGHT_DOWN, -999);
         }
 
+        int count = 0;
+        int sum = 0;
         for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
             if (entry.getValue() != -999) {
-                cnt += parseList(othelloList.get(i + entry.getValue()));
-            }
-        }
-
-        // 놓은 값을 알아서 셋팅합니다!
-        othelloList.get(i).setType(type);
-        othelloList.get(i).setValue(value);
-
-        if (cnt == value) {
-            for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
-                if (entry.getValue() != -999) {
-                    chageList(type, othelloList.get(i + entry.getValue()));
+                NumberOthello neighbor = othelloList.get(index + entry.getValue());
+                if (isNumberTile(neighbor)) {
+                    count += 1;
+                    sum += neighbor.getValue();
                 }
             }
         }
 
-        return true;
+        if (count == value || sum == value) {
+            for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
+                if (entry.getValue() != -999) {
+                    chageList(type, othelloList.get(index + entry.getValue()));
+                }
+            }
+        }
+    }
+
+    private boolean isNumberTile(NumberOthello o) {
+        return NumberOthelloType.PLAYER_ONE.getValue().equals(o.getType()) ||
+                NumberOthelloType.PLAYER_TWO.getValue().equals(o.getType());
+    }
+
+    private void applyGlobalEffects(String type) {
+        // For every numbered tile belonging to 'type', re-evaluate its local effects
+        for (int idx = 0; idx < othelloList.size(); idx++) {
+            NumberOthello cell = othelloList.get(idx);
+            if (type.equals(cell.getType()) && cell.getValue() > 0) {
+                applyLocalEffects(idx, type, cell.getValue());
+            }
+        }
+    }
+
+    private String opponentOf(String type) {
+        if (NumberOthelloType.PLAYER_ONE.getValue().equals(type)) return NumberOthelloType.PLAYER_TWO.getValue();
+        if (NumberOthelloType.PLAYER_TWO.getValue().equals(type)) return NumberOthelloType.PLAYER_ONE.getValue();
+        return type;
     }
 
     public int parseList(NumberOthello othello) {
@@ -134,7 +174,6 @@ public class GamePlayService {
         }
     }
 
-
     /*
       PLAYER_ONE("PO"),       // 플레이1
       PLAYER_TWO("PT"),       // 플레이2
@@ -143,7 +182,6 @@ public class GamePlayService {
       PLAYER_TWO_BLOCK("PTB");  // 플레이2의 배경
      */
     public int getScore(String type) {
-
         int score = 0;
         if (NumberOthelloType.PLAYER_ONE.getValue().equals(type)) {
             for (NumberOthello numberOthello : othelloList) {
