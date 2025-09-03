@@ -1,6 +1,28 @@
 let webSocket;
 let roomId = document.getElementById('roomId').value;
 let userNm = document.getElementById('userName').innerHTML;
+const BOARD_SIZE = 7; // 서버와 동일한 보드 크기
+
+// 동적 보드 생성
+function buildBoard() {
+    const board = document.getElementById('board');
+    if (!board) return;
+    board.innerHTML = '';
+    for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'cell-btn';
+        btn.id = 'send' + i;
+        btn.onclick = function () { sendNumber(String(i)); };
+        // 초기 빈칸을 렌더
+        const inner = document.createElement('div');
+        inner.className = 'blank';
+        btn.appendChild(inner);
+        board.appendChild(btn);
+    }
+}
+
+buildBoard();
+
 connect();
 document.getElementById("send").addEventListener("click", function () {
     send();
