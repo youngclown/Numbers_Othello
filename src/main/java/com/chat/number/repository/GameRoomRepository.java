@@ -1,50 +1,61 @@
 package com.chat.number.repository;
 
 import com.chat.number.domain.GameRoom;
-import com.chat.number.service.MasterControlService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class GameRoomRepository {
-    private Map<String, GameRoom> gameRoomMap;
-    private final ObjectMapper objectMapper;
 
-    public GameRoomRepository(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    private final RedisTemplate<String, GameRoom> gameRoomRedisTemplate;
+    private final RedisTemplate<String, String> stringRedisTemplate;
+    private static final String ROOMS_KEY = "gamerooms:active";
+
+    public GameRoomRepository(RedisTemplate<String, GameRoom> gameRoomRedisTemplate, RedisTemplate<String, String> stringRedisTemplate) {
+        this.gameRoomRedisTemplate = gameRoomRedisTemplate;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    @PostConstruct
-    private void init() {
-        this.gameRoomMap = new LinkedHashMap<>();
+    private String getRoomKey(String roomId) {
+        return "gameroom:" + roomId;
     }
 
-    // 방찾기 List
     public List<GameRoom> findAllRoom() {
-        List<GameRoom> gameRooms = new ArrayList<>(this.gameRoomMap.values());
-        Collections.reverse(gameRooms);
-        return gameRooms;
+        Set<String> roomIds = stringRedisTemplate.opsForSet().members(ROOMS_KEY);
+        if (roomIds == null || roomIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<GameRoom> rooms = gameRoomRedisTemplate.opsForValue().multiGet(
+                roomIds.stream().map(this::getRoomKey).collect(Collectors.toList())
+        );
+        return rooms.stream().filter(Objects::nonNull).sorted(Comparator.comparing(GameRoom::getRoomId).reversed()).collect(Collectors.toList());
     }
 
-    // 방
     public GameRoom findRoomById(String id) {
-        return this.gameRoomMap.get(id);
+        return gameRoomRedisTemplate.opsForValue().get(getRoomKey(id));
     }
 
-    // 방 생성
     public GameRoom createChatRoom(String name) {
         GameRoom gameRoom = new GameRoom();
         gameRoom.setRoomId(UUID.randomUUID().toString());
         gameRoom.setName(name);
 
-        // 방생성 후 게임 스타트, GAME MASTER PLAY
-        MasterControlService t = new MasterControlService(gameRoom, objectMapper);
-        t.start();
+        gameRoomRedisTemplate.opsForValue().set(getRoomKey(gameRoom.getRoomId()), gameRoom);
+        stringRedisTemplate.opsForSet().add(ROOMS_KEY, gameRoom.getRoomId());
 
-        this.gameRoomMap.put(gameRoom.getRoomId(), gameRoom);
         return gameRoom;
+    }
+
+    public void save(GameRoom gameRoom) {
+        gameRoomRedisTemplate.opsForValue().set(getRoomKey(gameRoom.getRoomId()), gameRoom);
+    }
+
+    public void deleteRoom(String roomId) {
+        gameRoomRedisTemplate.delete(getRoomKey(roomId));
+        stringRedisTemplate.opsForSet().remove(ROOMS_KEY, roomId);
     }
 }

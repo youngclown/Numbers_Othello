@@ -55,7 +55,7 @@ public class MasterControlService extends Thread {
 
                 } catch (Exception e) {
                     removeCheck = true;
-                    writerList.add(writeUser.get(session.getId()).getUsername());
+                    writerList.add(writeUser.get(session.getId()).getUserName());
                     i.remove();
                 }
             }

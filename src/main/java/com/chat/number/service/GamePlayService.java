@@ -1,8 +1,10 @@
 package com.chat.number.service;
 
+import com.chat.number.domain.GameRoom;
 import com.chat.number.model.NumberOthello;
 import com.chat.number.type.CheckerBoardRangeType;
 import com.chat.number.type.NumberOthelloType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -17,8 +19,8 @@ import java.util.Map;
 public class GamePlayService {
     public Map<CheckerBoardRangeType, Integer> CHECKERBOARD = new HashMap<>();
     public ArrayList<NumberOthello> othelloList = new ArrayList<>();
+    @JsonIgnore
     final int CHECKERBOARD_SIZE = 7; // 가로 세로 체커보드
-    // 마지막 낸 숫자 추적 (플레이어별)
     private final Map<String, Integer> lastPlayedValue = new HashMap<>();
 
     public void init() {
@@ -56,30 +58,54 @@ public class GamePlayService {
         }
     }
 
-    public boolean gamePlay(String numberOthello, String numberChoice, String type) {
+    public boolean gamePlay(GameRoom gameRoom, String numberOthello, String numberChoice, String type) {
         int i = Integer.parseInt(numberOthello);
         int value = Integer.parseInt(numberChoice);
-        String setType = othelloList.get(i).getType();
 
-        // Rule 1: 1은 두번 연속으로 낼 수 없습니다. (단, 1만 남을 경우는 예외 - 현재는 단순 연속 제한만 적용)
-        if (value == 1 && lastPlayedValue.getOrDefault(type, 0) == 1) {
+        // 1. 턴 검사
+        if (!gameRoom.getCurrentPlayer().equals(type)) {
+            log.warn("Not your turn. Current player: {}, Your type: {}", gameRoom.getCurrentPlayer(), type);
             return false;
         }
 
-        // Only allow placing on BLANK cells
-        if (!NumberOthelloType.BLANK.getValue().equals(setType)) return false;
+        // 2. 패 검사
+        Map<Integer, Integer> hand = gameRoom.getPlayerHands().get(type);
+        if (hand == null || hand.getOrDefault(value, 0) <= 0) {
+            log.warn("Player {} does not have number {} in hand.", type, value);
+            return false;
+        }
 
-        // place the number first
+        // 3. '1' 연속 사용 금지 규칙 (예외 포함)
+        if (value == 1 && lastPlayedValue.getOrDefault(type, 0) == 1) {
+            // 1을 제외한 다른 카드가 있는지 확인
+            boolean hasOtherCards = hand.entrySet().stream().anyMatch(entry -> entry.getKey() != 1 && entry.getValue() > 0);
+            if (hasOtherCards) {
+                log.warn("Player {} cannot play 1 twice in a row.", type);
+                return false;
+            }
+        }
+
+        // 4. 빈 칸에만 놓기
+        if (!NumberOthelloType.BLANK.getValue().equals(othelloList.get(i).getType())) return false;
+
+        // 5. 게임 로직 실행
         othelloList.get(i).setType(type);
         othelloList.get(i).setValue(value);
         lastPlayedValue.put(type, value);
 
-        // apply effects around the newly placed number
-        applyLocalEffects(i, type, value);
+        // 6. 카드 사용 처리
+        hand.put(value, hand.get(value) - 1);
 
-        // After current player's effects, apply global effects: first current player, then opponent
-        applyGlobalEffects(type);
-        applyGlobalEffects(opponentOf(type));
+        // 7. 효과 적용
+        applyLocalEffects(i, type, value);
+        // applyGlobalEffects(type); // NOTE: 연쇄 효과는 복잡하고 버그 가능성이 있어 우선 비활성화
+        // applyGlobalEffects(opponentOf(type));
+
+        // 8. 턴 변경
+        gameRoom.setCurrentPlayer(opponentOf(type));
+
+        // 9. 게임 종료 확인
+        checkGameOver(gameRoom);
 
         return true;
     }
@@ -112,21 +138,22 @@ public class GamePlayService {
 
         int count = 0;
         int sum = 0;
+        ArrayList<NumberOthello> neighborsToFlip = new ArrayList<>();
+
         for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
             if (entry.getValue() != -999) {
                 NumberOthello neighbor = othelloList.get(index + entry.getValue());
                 if (isNumberTile(neighbor)) {
-                    count += 1;
+                    count++;
                     sum += neighbor.getValue();
+                    neighborsToFlip.add(neighbor);
                 }
             }
         }
 
         if (count == value || sum == value) {
-            for (Map.Entry<CheckerBoardRangeType, Integer> entry : CHECKERBOARD.entrySet()) {
-                if (entry.getValue() != -999) {
-                    chageList(type, othelloList.get(index + entry.getValue()));
-                }
+            for (NumberOthello neighbor : neighborsToFlip) {
+                chageList(type, neighbor);
             }
         }
     }
@@ -136,13 +163,17 @@ public class GamePlayService {
                 NumberOthelloType.PLAYER_TWO.getValue().equals(o.getType());
     }
 
-    private void applyGlobalEffects(String type) {
-        // For every numbered tile belonging to 'type', re-evaluate its local effects
-        for (int idx = 0; idx < othelloList.size(); idx++) {
-            NumberOthello cell = othelloList.get(idx);
-            if (type.equals(cell.getType()) && cell.getValue() > 0) {
-                applyLocalEffects(idx, type, cell.getValue());
-            }
+    private void checkGameOver(GameRoom room) {
+        // 조건 1: 보드가 꽉 찼는가?
+        boolean boardFull = othelloList.stream().noneMatch(o -> o.getType().equals(NumberOthelloType.BLANK.getValue()));
+
+        // 조건 2: 한 명이라도 카드를 모두 소진했는가?
+        boolean playerOneNoCards = room.getPlayerHands().get(NumberOthelloType.PLAYER_ONE.getValue()).values().stream().allMatch(v -> v == 0);
+        boolean playerTwoNoCards = room.getPlayerHands().get(NumberOthelloType.PLAYER_TWO.getValue()).values().stream().allMatch(v -> v == 0);
+
+        if (boardFull || playerOneNoCards || playerTwoNoCards) {
+            room.setGameStart(false); // 게임 종료 상태로 변경
+            log.info("Game Over in room {}. Board Full: {}, P1 No Cards: {}, P2 No Cards: {}", room.getRoomId(), boardFull, playerOneNoCards, playerTwoNoCards);
         }
     }
 
@@ -162,38 +193,32 @@ public class GamePlayService {
     }
 
     public void chageList(String type, NumberOthello othello) {
-        if (NumberOthelloType.PLAYER_ONE.getValue().equals(othello.getType()) ||
-                NumberOthelloType.PLAYER_TWO.getValue().equals(othello.getType())) {
+        if (isNumberTile(othello)) { // 자신의 돌은 뒤집지 않음
             if (NumberOthelloType.PLAYER_ONE.getValue().equals(type)) {
                 othello.setType(NumberOthelloType.PLAYER_ONE_BLOCK.getValue());
-                othello.setValue(1);  // 해당 배열의 '1' 값 설정
             } else if (NumberOthelloType.PLAYER_TWO.getValue().equals(type)) {
                 othello.setType(NumberOthelloType.PLAYER_TWO_BLOCK.getValue());
-                othello.setValue(1);
             }
         }
     }
 
-    /*
-      PLAYER_ONE("PO"),       // 플레이1
-      PLAYER_TWO("PT"),       // 플레이2
-      BLANK("B"),            // 빈화면
-      PLAYER_ONE_BLOCK("POB"), // 플레이1의 배경
-      PLAYER_TWO_BLOCK("PTB");  // 플레이2의 배경
-     */
     public int getScore(String type) {
         int score = 0;
         if (NumberOthelloType.PLAYER_ONE.getValue().equals(type)) {
             for (NumberOthello numberOthello : othelloList) {
-                if (numberOthello.getType().equals(NumberOthelloType.PLAYER_ONE.getValue()) ||
-                        numberOthello.getType().equals(NumberOthelloType.PLAYER_ONE_BLOCK.getValue()))
+                if (numberOthello.getType().equals(NumberOthelloType.PLAYER_ONE.getValue())) {
                     score += numberOthello.getValue();
+                } else if (numberOthello.getType().equals(NumberOthelloType.PLAYER_ONE_BLOCK.getValue())) {
+                    score += 1; // 뒤집힌 돌은 1점
+                }
             }
         } else if (NumberOthelloType.PLAYER_TWO.getValue().equals(type)) {
             for (NumberOthello numberOthello : othelloList) {
-                if (numberOthello.getType().equals(NumberOthelloType.PLAYER_TWO.getValue()) ||
-                        numberOthello.getType().equals(NumberOthelloType.PLAYER_TWO_BLOCK.getValue()))
+                if (numberOthello.getType().equals(NumberOthelloType.PLAYER_TWO.getValue())) {
                     score += numberOthello.getValue();
+                } else if (numberOthello.getType().equals(NumberOthelloType.PLAYER_TWO_BLOCK.getValue())) {
+                    score += 1; // 뒤집힌 돌은 1점
+                }
             }
         } else {
             log.error("not found user {}", type);
